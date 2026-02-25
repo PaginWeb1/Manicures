@@ -3,241 +3,265 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manicuras PRO | Panel Admin y Reserva</title>
+<title>Inventario Pro + Ventas | Sistema Comercial</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<meta name="description" content="Manicuras PRO con panel de admin, reservas, gráficos y ventas.">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;scroll-behavior:smooth}
-h2{text-align:center;margin-bottom:20px;color:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#f1f5f9;
+    color:#1e293b;
+}
 
 /* LOGIN */
-#login{height:100vh;display:flex;justify-content:center;align-items:center}
-.login-box{background:white;padding:40px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);width:320px}
-.login-box input{width:100%;padding:12px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc}
-.login-box button{width:100%;padding:12px;border:none;border-radius:8px;background:#2563eb;color:white;font-weight:600;cursor:pointer}
+.login-container{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.login-box{
+    background:white;
+    padding:40px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    width:320px;
+}
+.login-box h2{text-align:center;margin-bottom:20px}
+.login-box input{width:100%;padding:12px;margin-bottom:15px;border-radius:8px;border:1px solid #ccc;}
+.login-box button{width:100%;padding:12px;border:none;border-radius:8px;background:#2563eb;color:white;font-weight:600;cursor:pointer;}
 
 /* APP */
 #app{display:none;}
-header{background:#0f172a;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
-header button{background:#ef4444;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
-.container{max-width:1200px;margin:25px auto;padding:0 15px}
-
-/* DASHBOARD */
-.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:25px}
-.card{background:white;padding:20px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,0.05);transition:0.3s ease}
-.card:hover{transform:translateY(-5px)}
-.card p{font-size:22px;font-weight:700}
-
-/* FORMS */
-form{display:grid;gap:10px;margin-bottom:20px}
-input,select,textarea{padding:12px;border-radius:8px;border:1px solid #ccc}
-textarea{resize:none}
-button{padding:12px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+header{background:#0f172a;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
+header button{background:#ef4444;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;}
+.container{max-width:1200px;margin:25px auto;padding:0 15px;}
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:25px;}
+.card{background:white;padding:20px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,0.05);transition:0.3s ease;}
+.card:hover{transform:translateY(-5px);}
+.card p{font-size:22px;font-weight:700;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:15px;}
+input, select{padding:12px;border-radius:8px;border:1px solid #ccc;}
+button{padding:12px;border:none;border-radius:8px;font-weight:600;cursor:pointer;}
 .btn-primary{background:#2563eb;color:white;}
 .btn-success{background:#16a34a;color:white;}
 .btn-danger{background:#ef4444;color:white;}
 .btn-warning{background:#f59e0b;color:white;}
-
-/* TABLES */
-.table-container{background:white;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,0.05);overflow-x:auto;margin-bottom:30px}
-table{width:100%;border-collapse:collapse}
-th{background:#0f172a;color:white;padding:12px;text-align:left}
-td{padding:12px;border-bottom:1px solid #eee}
-.stock-bajo{background:#fee2e2}
-
-/* CHART */
-canvas{background:white;border-radius:14px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,0.05);margin-bottom:30px}
-
-/* WHATSAPP */
-.whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:white;padding:15px;border-radius:50%;font-size:22px;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.4);}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-.grid{grid-template-columns:1fr}
-}
+.table-container{background:white;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,0.05);overflow-x:auto;margin-bottom:25px;}
+table{width:100%;border-collapse:collapse;min-width:700px;}
+th{background:#0f172a;color:white;padding:12px;text-align:left;}
+td{padding:12px;border-bottom:1px solid #eee;}
+.stock-bajo{background:#fee2e2;}
+.chart-container{background:white;padding:20px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,0.05);margin-bottom:25px;}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div id="login">
-<div class="login-box">
-<h2>Manicuras PRO Admin</h2>
-<input type="text" id="usuario" placeholder="Usuario">
-<input type="password" id="password" placeholder="Contraseña">
-<button onclick="iniciarSesion()">Ingresar</button>
-</div>
+<div class="login-container" id="login">
+    <div class="login-box">
+        <h2>Inventario Pro</h2>
+        <input type="text" id="usuario" placeholder="Usuario">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button onclick="iniciarSesion()">Ingresar</button>
+    </div>
 </div>
 
 <!-- APP -->
 <div id="app">
 <header>
-<div>Manicuras PRO Panel</div>
-<button onclick="cerrarSesion()">Cerrar Sesión</button>
+    <div>Inventario Pro + Ventas</div>
+    <button onclick="cerrarSesion()">Cerrar Sesión</button>
 </header>
 
 <div class="container">
 
 <!-- DASHBOARD -->
 <div class="dashboard">
-<div class="card"><div>Total Reservas</div><p id="totalReservas">0</p></div>
-<div class="card"><div>Total Clientes</div><p id="totalClientes">0</p></div>
-<div class="card"><div>Total Ventas</div><p id="totalVentas">$0</p></div>
+    <div class="card"><div>Total Productos</div><p id="totalProductos">0</p></div>
+    <div class="card"><div>Total Unidades</div><p id="totalUnidades">0</p></div>
+    <div class="card"><div>Valor Total</div><p id="valorTotal">$0</p></div>
+    <div class="card"><div>Total Ventas</div><p id="totalVentas">$0</p></div>
 </div>
 
-<!-- FORMULARIO RESERVAS -->
-<h2>Registrar Reserva</h2>
-<form onsubmit="agregarReserva(event)">
-<input type="text" id="resNombre" placeholder="Nombre" required>
-<input type="tel" id="resTelefono" placeholder="Teléfono" required>
-<select id="resServicio" required>
-<option value="">Selecciona un servicio</option>
-<option value="Manicura Clásica">Manicura Clásica</option>
-<option value="Uñas Acrílicas">Uñas Acrílicas</option>
-<option value="Gel y Semipermanente">Gel y Semipermanente</option>
-<option value="Pedicura">Pedicura</option>
-</select>
-<input type="date" id="resFecha" required>
-<button type="submit" class="btn-primary">Registrar Reserva</button>
-</form>
+<!-- BUSCADOR -->
+<input type="text" id="buscador" placeholder="Buscar producto..." onkeyup="filtrarProductos()" style="margin-bottom:15px;width:100%;">
 
+<!-- FORMULARIO PRODUCTOS -->
+<div class="form-grid">
+    <input type="text" id="nombre" placeholder="Producto">
+    <input type="number" id="cantidad" placeholder="Cantidad">
+    <input type="number" id="precio" placeholder="Precio">
+    <input type="number" id="stockMinimo" placeholder="Stock mínimo">
+    <button class="btn-primary" onclick="agregarProducto()">Agregar Producto</button>
+</div>
+
+<!-- TABLA PRODUCTOS -->
 <div class="table-container">
+<h3>Productos</h3>
 <table>
 <thead>
 <tr>
-<th>ID</th><th>Nombre</th><th>Teléfono</th><th>Servicio</th><th>Fecha</th><th>Acción</th>
-</tr>
-</thead>
-<tbody id="tablaReservas"></tbody>
-</table>
-</div>
-
-<!-- PRODUCTOS -->
-<h2>Registrar Producto</h2>
-<form onsubmit="agregarProducto(event)">
-<input type="text" id="prodNombre" placeholder="Nombre" required>
-<input type="number" id="prodPrecio" placeholder="Precio" required>
-<input type="number" id="prodStock" placeholder="Stock" required>
-<button type="submit" class="btn-success">Agregar Producto</button>
-</form>
-
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>ID</th><th>Producto</th><th>Precio</th><th>Stock</th><th>Acción</th>
+<th>ID</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th><th>Fecha</th><th>Acción</th>
 </tr>
 </thead>
 <tbody id="tablaProductos"></tbody>
 </table>
 </div>
 
-<!-- GRÁFICO DE RESERVAS -->
-<h2>Gráfico de Reservas por Servicio</h2>
-<canvas id="graficoReservas" height="150"></canvas>
+<!-- FORMULARIO VENTAS -->
+<div class="form-grid">
+    <select id="productoVenta"></select>
+    <input type="number" id="cantidadVenta" placeholder="Cantidad">
+    <select id="planPago">
+        <option value="contado">Contado</option>
+        <option value="3x">3 cuotas</option>
+        <option value="6x">6 cuotas</option>
+    </select>
+    <button class="btn-success" onclick="agregarVenta()">Registrar Venta</button>
+</div>
+
+<!-- TABLA VENTAS -->
+<div class="table-container">
+<h3>Ventas</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th><th>Producto</th><th>Cantidad</th><th>Total</th><th>Plan de Pago</th><th>Fecha</th></tr>
+</thead>
+<tbody id="tablaVentas"></tbody>
+</table>
+</div>
+
+<!-- GRÁFICOS -->
+<div class="chart-container">
+<h3>Gráfico de Ventas por Producto</h3>
+<canvas id="graficoVentas"></canvas>
+</div>
 
 </div>
 </div>
-
-<a href="https://wa.me/56900000000?text=Hola%20quiero%20una%20cita%20para%20manicura" class="whatsapp">💬</a>
 
 <script>
-// LOGIN
+// Datos
+let productos = JSON.parse(localStorage.getItem("inventarioPro")) || [];
+let ventas = JSON.parse(localStorage.getItem("ventasPro")) || [];
+let ultimoIdProducto = parseInt(localStorage.getItem("ultimoIdProducto")) || 0;
+let ultimoIdVenta = parseInt(localStorage.getItem("ultimoIdVenta")) || 0;
+
+/* LOGIN */
 function iniciarSesion(){
-const u = document.getElementById("usuario").value.trim();
-const p = document.getElementById("password").value.trim();
-if(u==="admin" && p==="1234"){localStorage.setItem("sesionActiva","true");mostrarApp();}
-else{alert("Credenciales incorrectas");}
+    const u = document.getElementById("usuario").value.trim();
+    const p = document.getElementById("password").value.trim();
+    if(u==="admin" && p==="1234"){localStorage.setItem("sesionActiva","true");mostrarApp();}
+    else alert("Credenciales incorrectas");
 }
 function cerrarSesion(){localStorage.removeItem("sesionActiva");location.reload();}
 function mostrarApp(){document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";}
 if(localStorage.getItem("sesionActiva")==="true"){mostrarApp();}
 
-// DATOS
-let reservas = JSON.parse(localStorage.getItem("reservas")) || [];
-let productos = JSON.parse(localStorage.getItem("productos")) || [];
-
-// RESERVAS
-function agregarReserva(e){
-e.preventDefault();
-const nombre = document.getElementById("resNombre").value;
-const telefono = document.getElementById("resTelefono").value;
-const servicio = document.getElementById("resServicio").value;
-const fecha = document.getElementById("resFecha").value;
-
-reservas.push({id:Date.now(),nombre,telefono,servicio,fecha});
-localStorage.setItem("reservas",JSON.stringify(reservas));
-document.querySelectorAll("#resNombre,#resTelefono,#resServicio,#resFecha").forEach(i=>i.value="");
-mostrarReservas();actualizarDashboard();actualizarGrafico();
+// Guardar localStorage
+function guardar(){
+    localStorage.setItem("inventarioPro", JSON.stringify(productos));
+    localStorage.setItem("ventasPro", JSON.stringify(ventas));
+    localStorage.setItem("ultimoIdProducto", ultimoIdProducto);
+    localStorage.setItem("ultimoIdVenta", ultimoIdVenta);
 }
 
-function eliminarReserva(id){
-reservas = reservas.filter(r=>r.id!==id);
-localStorage.setItem("reservas",JSON.stringify(reservas));
-mostrarReservas();actualizarDashboard();actualizarGrafico();
+// Formato CLP
+function formatoCLP(valor){return valor.toLocaleString("es-CL",{style:"currency",currency:"CLP"});}
+
+// Agregar producto
+function agregarProducto(){
+    const n=document.getElementById("nombre").value.trim();
+    const c=parseInt(document.getElementById("cantidad").value);
+    const p=parseFloat(document.getElementById("precio").value);
+    const s=parseInt(document.getElementById("stockMinimo").value)||0;
+    if(!n||isNaN(c)||isNaN(p)){alert("Complete los campos correctamente");return;}
+    productos.push({id:++ultimoIdProducto,nombre:n,cantidad:c,precio:p,stockMinimo:s,fecha:new Date().toLocaleDateString()});
+    document.querySelectorAll(".form-grid input").forEach(i=>i.value="");
+    guardar();mostrarProductos();actualizarSelect();
 }
 
-function mostrarReservas(){
-const tabla = document.getElementById("tablaReservas");
-tabla.innerHTML="";
-reservas.forEach(r=>{
-tabla.innerHTML+=`<tr>
-<td>${r.id}</td><td>${r.nombre}</td><td>${r.telefono}</td><td>${r.servicio}</td><td>${r.fecha}</td>
-<td><button class="btn-danger" onclick="eliminarReserva(${r.id})">Eliminar</button></td></tr>`;
-});
-}
-
-// PRODUCTOS
-function agregarProducto(e){
-e.preventDefault();
-const nombre = document.getElementById("prodNombre").value;
-const precio = parseFloat(document.getElementById("prodPrecio").value);
-const stock = parseInt(document.getElementById("prodStock").value);
-productos.push({id:Date.now(),nombre,precio,stock});
-localStorage.setItem("productos",JSON.stringify(productos));
-document.querySelectorAll("#prodNombre,#prodPrecio,#prodStock").forEach(i=>i.value="");
-mostrarProductos();actualizarDashboard();
-}
-
-function eliminarProducto(id){
-productos = productos.filter(p=>p.id!==id);
-localStorage.setItem("productos",JSON.stringify(productos));
-mostrarProductos();actualizarDashboard();
-}
-
+// Mostrar productos
 function mostrarProductos(){
-const tabla = document.getElementById("tablaProductos");
-tabla.innerHTML="";
-productos.forEach(p=>{
-tabla.innerHTML+=`<tr>
-<td>${p.id}</td><td>${p.nombre}</td><td>${p.precio}</td><td>${p.stock}</td>
-<td><button class="btn-danger" onclick="eliminarProducto(${p.id})">Eliminar</button></td>
-</tr>`;
-});
+    const tabla=document.getElementById("tablaProductos");
+    tabla.innerHTML="";let totalUnidades=0,valorTotal=0;
+    productos.forEach((p,i)=>{
+        let total=p.cantidad*p.precio;
+        totalUnidades+=p.cantidad;valorTotal+=total;
+        let clase=p.cantidad<=p.stockMinimo?"stock-bajo":"";
+        tabla.innerHTML+=`<tr class="${clase}">
+        <td>${p.id}</td><td>${p.nombre}</td><td>${p.cantidad}</td><td>${formatoCLP(p.precio)}</td>
+        <td>${formatoCLP(total)}</td><td>${p.fecha}</td>
+        <td>
+            <button class="btn-warning" onclick="editarProducto(${i})">Editar</button>
+            <button class="btn-danger" onclick="eliminarProducto(${i})">Eliminar</button>
+        </td></tr>`;
+    });
+    document.getElementById("totalProductos").innerText=productos.length;
+    document.getElementById("totalUnidades").innerText=totalUnidades;
+    document.getElementById("valorTotal").innerText=formatoCLP(valorTotal);
 }
 
-// DASHBOARD
-function actualizarDashboard(){
-document.getElementById("totalReservas").innerText=reservas.length;
-document.getElementById("totalClientes").innerText=[...new Set(reservas.map(r=>r.telefono))].length;
-let totalVentas = productos.reduce((acc,p)=>acc+p.precio*p.stock,0);
-document.getElementById("totalVentas").innerText=`$${totalVentas.toLocaleString("es-CL")}`;
+// Editar producto
+function editarProducto(index){
+    let n=prompt("Nuevo nombre",productos[index].nombre);
+    if(n){productos[index].nombre=n;guardar();mostrarProductos();actualizarSelect();}
 }
 
-// GRAFICO
+// Eliminar producto
+function eliminarProducto(index){if(confirm("¿Seguro que quieres eliminar este producto?")){productos.splice(index,1);guardar();mostrarProductos();actualizarSelect();}}
+
+// Filtrar
+function filtrarProductos(){const t=document.getElementById("buscador").value.toLowerCase();document.querySelectorAll("#tablaProductos tr").forEach(r=>{r.style.display=r.innerText.toLowerCase().includes(t)?"":"none";});}
+
+// Actualizar select de ventas
+function actualizarSelect(){
+    const sel=document.getElementById("productoVenta");
+    sel.innerHTML="";
+    productos.forEach(p=>{sel.innerHTML+=`<option value="${p.id}">${p.nombre}</option>`;});
+}
+actualizarSelect();
+
+// Agregar venta
+function agregarVenta(){
+    const prodId=parseInt(document.getElementById("productoVenta").value);
+    const cant=parseInt(document.getElementById("cantidadVenta").value);
+    const plan=document.getElementById("planPago").value;
+    if(isNaN(prodId)||isNaN(cant)||cant<=0){alert("Ingrese cantidad válida");return;}
+    let prod=productos.find(p=>p.id===prodId);
+    if(!prod||prod.cantidad<cant){alert("No hay stock suficiente");return;}
+    prod.cantidad-=cant;
+    ventas.push({id:++ultimoIdVenta,producto:prod.nombre,cantidad:cant,total:cant*prod.precio,planPago:plan,fecha:new Date().toLocaleDateString()});
+    document.getElementById("cantidadVenta").value="";
+    guardar();mostrarProductos();mostrarVentas();actualizarGrafico();
+}
+
+// Mostrar ventas
+function mostrarVentas(){
+    const tabla=document.getElementById("tablaVentas");tabla.innerHTML="";let totalVentas=0;
+    ventas.forEach(v=>{totalVentas+=v.total;tabla.innerHTML+=`<tr><td>${v.id}</td><td>${v.producto}</td><td>${v.cantidad}</td><td>${formatoCLP(v.total)}</td><td>${v.planPago}</td><td>${v.fecha}</td></tr>`;});
+    document.getElementById("totalVentas").innerText=formatoCLP(totalVentas);
+}
+mostrarProductos();mostrarVentas();
+
+// GRÁFICO
+let ctx=document.getElementById("graficoVentas").getContext("2d");
+let grafico=new Chart(ctx,{type:'bar',data:{labels:[],datasets:[{label:'Ventas',data:[],backgroundColor:'#2563eb'}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+
 function actualizarGrafico(){
-const ctx = document.getElementById("graficoReservas").getContext("2d");
-const servicios = [...new Set(reservas.map(r=>r.servicio))];
-const counts = servicios.map(s=>reservas.filter(r=>r.servicio===s).length);
-if(window.chart) window.chart.destroy();
-window.chart = new Chart(ctx,{type:'bar',data:{labels:servicios,datasets:[{label:'Reservas',data:counts,backgroundColor:'#f59e0b'}]},options:{responsive:true,plugins:{legend:{display:false}}}});
+    let data={};
+    ventas.forEach(v=>{data[v.producto]=(data[v.producto]||0)+v.total;});
+    grafico.data.labels=Object.keys(data);
+    grafico.data.datasets[0].data=Object.values(data);
+    grafico.update();
 }
-
-// INIT
-mostrarReservas();mostrarProductos();actualizarDashboard();actualizarGrafico();
+actualizarGrafico();
 </script>
 
 </body>
