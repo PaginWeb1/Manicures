@@ -3,37 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manicure Pro - Nivel 12</title>
+<title>Manicure Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 body{display:flex;height:100vh;background:#fff0f6;transition:.3s}
-
-/* DARK MODE */
 body.dark{background:#1f2937;color:white;}
-body.dark .card,
-body.dark table,
-body.dark input,
-body.dark .calendario-container{background:#374151;color:white;}
+body.dark .card,body.dark table,body.dark input,body.dark select{background:#374151;color:white;}
 body.dark th{background:#4b5563}
 
-/* LOGIN */
 #loginScreen{
-position:fixed;inset:0;
-background:#fff0f6;
-display:flex;justify-content:center;align-items:center;
-z-index:1000;
+position:fixed;inset:0;background:#fff0f6;
+display:flex;justify-content:center;align-items:center;z-index:1000;
 }
 .loginBox{
 background:white;padding:40px;border-radius:16px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-width:320px;text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);width:320px;text-align:center;
 }
 .loginBox h2{color:#ec4899;margin-bottom:20px}
 
-/* Sidebar */
 .sidebar{
 width:240px;background:#ec4899;color:white;
 padding:20px;display:flex;flex-direction:column;
@@ -43,20 +33,13 @@ background:none;border:none;color:white;
 text-align:left;padding:12px;margin-bottom:5px;
 cursor:pointer;border-radius:8px;
 }
-.sidebar button:hover,
-.sidebar button.active{background:#db2777}
-.logout{
-margin-top:auto;background:#be185d;
-padding:10px;border-radius:8px;
-cursor:pointer;text-align:center;
-}
+.sidebar button:hover,.sidebar button.active{background:#db2777}
+.logout{margin-top:auto;background:#be185d;padding:10px;border-radius:8px;cursor:pointer;text-align:center;}
 
-/* Content */
 .content{flex:1;padding:30px;overflow-y:auto}
 .section{display:none}
 .section.active{display:block}
 
-/* Cards */
 .cards{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
@@ -68,7 +51,6 @@ box-shadow:0 4px 15px rgba(236,72,153,.2);
 }
 .card p{font-size:28px;font-weight:700;color:#ec4899}
 
-/* Tables */
 table{
 width:100%;background:white;
 border-radius:16px;overflow:hidden;
@@ -78,11 +60,11 @@ th,td{padding:12px;text-align:left}
 th{background:#fbcfe8}
 tr:nth-child(even){background:#fff5f9}
 
-/* Forms */
-input{
+input,select{
 padding:10px;margin:5px 0;width:100%;
 border:1px solid #f9a8d4;border-radius:8px;
 }
+
 button.primary{
 background:#ec4899;color:white;border:none;
 padding:10px 15px;border-radius:8px;cursor:pointer;margin-top:5px;
@@ -90,45 +72,18 @@ padding:10px 15px;border-radius:8px;cursor:pointer;margin-top:5px;
 button.success{background:#10b981;color:white;border:none;padding:6px 10px;border-radius:6px}
 button.danger{background:#ef4444;color:white;border:none;padding:6px 10px;border-radius:6px}
 
-/* CALENDARIO */
-.calendario-container{
-background:white;
-padding:20px;
-border-radius:16px;
-margin-top:20px;
-box-shadow:0 4px 15px rgba(236,72,153,.2);
-}
-.calendario-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-color:#ec4899;
-}
-.calendario-header button{
-background:#ec4899;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:8px;
-cursor:pointer;
-}
-.dias-semana, .calendario-grid{
+.cal-grid{
 display:grid;
 grid-template-columns:repeat(7,1fr);
-text-align:center;
-margin-top:10px;
+gap:5px;margin-top:15px;
 }
-.calendario-grid div{
-padding:10px;
-margin:4px;
-border-radius:8px;
-cursor:pointer;
-font-weight:600;
+.cal-grid div{
+padding:10px;border-radius:8px;text-align:center;font-weight:600;
 }
 .libre{background:#d1fae5}
 .ocupado{background:#fecaca}
 .lleno{background:#ef4444;color:white}
-.hoy{border:2px solid #ec4899}
+.domingo{background:#ddd;color:#888}
 </style>
 </head>
 <body>
@@ -139,6 +94,7 @@ font-weight:600;
 <input id="user" placeholder="Usuario">
 <input id="pass" type="password" placeholder="Contraseña">
 <button class="primary" onclick="login()">Ingresar</button>
+<button class="primary" onclick="mostrarPublico()">Reserva Online</button>
 </div>
 </div>
 
@@ -146,10 +102,9 @@ font-weight:600;
 <h2>💅 Manicure Pro</h2>
 <button onclick="mostrar(event,'dashboard')" class="active">Dashboard</button>
 <button onclick="mostrar(event,'clientes')">Clientes</button>
-<button onclick="mostrar(event,'productos')">Productos</button>
+<button onclick="mostrar(event,'servicios')">Servicios</button>
 <button onclick="mostrar(event,'agenda')">Agenda</button>
 <button onclick="mostrar(event,'ventas')">Ventas</button>
-<button onclick="mostrar(event,'reportes')">Reportes</button>
 <button onclick="toggleDark()">🌙 Modo Oscuro</button>
 <div class="logout" onclick="cerrarSesion()">Cerrar sesión</div>
 </div>
@@ -160,85 +115,73 @@ font-weight:600;
 <h1>Dashboard</h1>
 <div class="cards">
 <div class="card"><h3>Clientes</h3><p id="totalClientes">0</p></div>
-<div class="card"><h3>Productos</h3><p id="totalProductos">0</p></div>
-<div class="card"><h3>Ventas</h3><p id="totalVentas">0</p></div>
+<div class="card"><h3>Reservas</h3><p id="totalReservas">0</p></div>
 <div class="card"><h3>Ingresos</h3><p id="totalIngresos">$0</p></div>
 </div>
-<canvas id="graficoVentas"></canvas>
+<canvas id="grafico"></canvas>
 </section>
 
 <section id="clientes" class="section">
 <h1>Clientes</h1>
 <input id="nombreCliente" placeholder="Nombre">
 <input id="telefonoCliente" placeholder="Teléfono">
-<button class="primary" onclick="agregarCliente()">Agregar Cliente</button>
+<button class="primary" onclick="agregarCliente()">Agregar</button>
 <table><thead><tr><th>Nombre</th><th>Teléfono</th><th></th></tr></thead>
 <tbody id="tablaClientes"></tbody></table>
 </section>
 
-<section id="productos" class="section">
-<h1>Productos</h1>
-<input id="nombreProducto" placeholder="Producto">
-<input id="precioProducto" type="number" placeholder="Precio">
-<button class="primary" onclick="agregarProducto()">Agregar Producto</button>
-<table><thead><tr><th>Producto</th><th>Precio</th><th></th></tr></thead>
-<tbody id="tablaProductos"></tbody></table>
+<section id="servicios" class="section">
+<h1>Servicios</h1>
+<input id="nombreServicio" placeholder="Servicio">
+<input id="precioServicio" type="number" placeholder="Precio">
+<input id="duracionServicio" type="number" placeholder="Duración (min)">
+<button class="primary" onclick="agregarServicio()">Agregar</button>
+<table><thead><tr><th>Servicio</th><th>Precio</th><th>Duración</th></tr></thead>
+<tbody id="tablaServicios"></tbody></table>
 </section>
 
 <section id="agenda" class="section">
-<h1>Reservas</h1>
+<h1>Agenda</h1>
 <input id="clienteReserva" placeholder="Cliente">
+<select id="servicioReserva"></select>
 <input id="fechaReserva" type="date">
 <input id="horaReserva" type="time">
 <button class="primary" onclick="agregarReserva()">Agendar</button>
-<table><thead><tr><th>Cliente</th><th>Fecha</th><th>Hora</th><th>Estado</th><th></th></tr></thead>
+<div id="calendario" class="cal-grid"></div>
+<table><thead><tr><th>Cliente</th><th>Servicio</th><th>Fecha</th><th>Hora</th><th>Estado</th><th></th></tr></thead>
 <tbody id="tablaReservas"></tbody></table>
-
-<hr style="margin:30px 0">
-
-<h2>📅 Calendario de Reservas</h2>
-<div class="calendario-container">
-<div class="calendario-header">
-<button onclick="cambiarMes(-1)">◀</button>
-<h3 id="mesActual"></h3>
-<button onclick="cambiarMes(1)">▶</button>
-</div>
-<div class="dias-semana">
-<div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
-</div>
-<div id="calendario" class="calendario-grid"></div>
-</div>
-
-<h3 style="margin-top:20px">📋 Reservas del día seleccionado</h3>
-<div id="detalleDia"></div>
-
 </section>
 
 <section id="ventas" class="section">
 <h1>Ventas</h1>
 <input id="clienteVenta" placeholder="Cliente">
 <input id="montoVenta" type="number" placeholder="Monto">
-<button class="primary" onclick="agregarVenta()">Registrar Venta</button>
+<button class="primary" onclick="agregarVenta()">Registrar</button>
 <table><thead><tr><th>Cliente</th><th>Monto</th></tr></thead>
 <tbody id="tablaVentas"></tbody></table>
 </section>
 
-<section id="reportes" class="section">
-<h1>Reporte Mensual</h1>
-<h2 id="reporteIngresos">$0</h2>
+<section id="publico" class="section">
+<h1>Reserva tu hora 💅</h1>
+<select id="servicioPublico"></select>
+<input id="nombrePublico" placeholder="Tu nombre">
+<input id="telefonoPublico" placeholder="Tu teléfono">
+<input id="fechaPublico" type="date">
+<input id="horaPublico" type="time">
+<button class="primary" onclick="reservarPublico()">Reservar</button>
 </section>
 
 </div>
 
 <script>
 let clientes=JSON.parse(localStorage.getItem("clientes"))||[];
-let productos=JSON.parse(localStorage.getItem("productos"))||[];
+let servicios=JSON.parse(localStorage.getItem("servicios"))||[];
 let reservas=JSON.parse(localStorage.getItem("reservas"))||[];
 let ventas=JSON.parse(localStorage.getItem("ventas"))||[];
 
 function guardar(){
 localStorage.setItem("clientes",JSON.stringify(clientes));
-localStorage.setItem("productos",JSON.stringify(productos));
+localStorage.setItem("servicios",JSON.stringify(servicios));
 localStorage.setItem("reservas",JSON.stringify(reservas));
 localStorage.setItem("ventas",JSON.stringify(ventas));
 }
@@ -255,15 +198,27 @@ document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("acti
 document.getElementById(id).classList.add("active");
 e.target.classList.add("active");
 }
+function mostrarPublico(){
+loginScreen.style.display="none";
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.getElementById("publico").classList.add("active");
+}
+
 function toggleDark(){document.body.classList.toggle("dark");}
 
 function actualizarDashboard(){
 totalClientes.innerText=clientes.length;
-totalProductos.innerText=productos.length;
-totalVentas.innerText=ventas.length;
+totalReservas.innerText=reservas.length;
 let total=ventas.reduce((a,b)=>a+b.monto,0);
 totalIngresos.innerText="$"+total;
-reporteIngresos.innerText="$"+total;
+
+new Chart(document.getElementById("grafico"),{
+type:"bar",
+data:{
+labels:["Ingresos"],
+datasets:[{label:"Total",data:[total]}]
+}
+});
 }
 
 function agregarCliente(){
@@ -271,40 +226,81 @@ clientes.push({nombre:nombreCliente.value,telefono:telefonoCliente.value});
 guardar();renderClientes();actualizarDashboard();
 nombreCliente.value="";telefonoCliente.value="";
 }
+
 function renderClientes(){
 tablaClientes.innerHTML="";
 clientes.forEach((c,i)=>{
-tablaClientes.innerHTML+=`<tr><td>${c.nombre}</td><td>${c.telefono}</td><td><button class="danger" onclick="eliminarCliente(${i})">X</button></td></tr>`;
+tablaClientes.innerHTML+=`<tr><td>${c.nombre}</td><td>${c.telefono}</td>
+<td><button class="danger" onclick="eliminarCliente(${i})">X</button></td></tr>`;
 });
 }
 function eliminarCliente(i){clientes.splice(i,1);guardar();renderClientes();actualizarDashboard();}
 
-function agregarProducto(){
-productos.push({nombre:nombreProducto.value,precio:parseFloat(precioProducto.value)});
-guardar();renderProductos();actualizarDashboard();
-nombreProducto.value="";precioProducto.value="";
+function agregarServicio(){
+servicios.push({nombre:nombreServicio.value,precio:parseFloat(precioServicio.value),duracion:parseInt(duracionServicio.value)});
+guardar();renderServicios();cargarServicios();
 }
-function renderProductos(){
-tablaProductos.innerHTML="";
-productos.forEach((p,i)=>{
-tablaProductos.innerHTML+=`<tr><td>${p.nombre}</td><td>$${p.precio}</td><td><button class="danger" onclick="eliminarProducto(${i})">X</button></td></tr>`;
+function renderServicios(){
+tablaServicios.innerHTML="";
+servicios.forEach(s=>{
+tablaServicios.innerHTML+=`<tr><td>${s.nombre}</td><td>$${s.precio}</td><td>${s.duracion} min</td></tr>`;
 });
 }
-function eliminarProducto(i){productos.splice(i,1);guardar();renderProductos();actualizarDashboard();}
+function cargarServicios(){
+servicioReserva.innerHTML="";
+servicioPublico.innerHTML="";
+servicios.forEach(s=>{
+servicioReserva.innerHTML+=`<option>${s.nombre}</option>`;
+servicioPublico.innerHTML+=`<option>${s.nombre} - $${s.precio}</option>`;
+});
+}
 
 function agregarReserva(){
+let hora=parseInt(horaReserva.value.split(":")[0]);
+if(hora<10||hora>=19)return alert("Fuera de horario (10-19)");
+let fecha=new Date(fechaReserva.value);
+if(fecha.getDay()===0)return alert("No se trabaja domingos");
+
 let existe=reservas.find(r=>r.fecha===fechaReserva.value&&r.hora===horaReserva.value);
 if(existe)return alert("Horario ocupado");
-reservas.push({cliente:clienteReserva.value,fecha:fechaReserva.value,hora:horaReserva.value,estado:"Pendiente"});
-guardar();renderReservas();generarCalendario();
+
+reservas.push({
+cliente:clienteReserva.value,
+servicio:servicioReserva.value,
+fecha:fechaReserva.value,
+hora:horaReserva.value,
+estado:"Pendiente"
+});
+guardar();renderReservas();generarCalendario();actualizarDashboard();
 }
+
+function reservarPublico(){
+let existe=reservas.find(r=>r.fecha===fechaPublico.value&&r.hora===horaPublico.value);
+if(existe)return alert("Horario ocupado");
+
+reservas.push({
+cliente:nombrePublico.value,
+servicio:servicioPublico.value,
+fecha:fechaPublico.value,
+hora:horaPublico.value,
+estado:"Pendiente"
+});
+guardar();alert("Reserva enviada 💅");
+}
+
 function renderReservas(){
 tablaReservas.innerHTML="";
 reservas.forEach((r,i)=>{
-tablaReservas.innerHTML+=`<tr><td>${r.cliente}</td><td>${r.fecha}</td><td>${r.hora}</td><td>${r.estado}</td><td><button class="success" onclick="confirmar(${i})">✔</button></td></tr>`;
+tablaReservas.innerHTML+=`<tr>
+<td>${r.cliente}</td><td>${r.servicio}</td>
+<td>${r.fecha}</td><td>${r.hora}</td>
+<td>${r.estado}</td>
+<td>
+<button class="success" onclick="reservas[${i}].estado='Confirmada';guardar();renderReservas()">✔</button>
+<button class="danger" onclick="reservas[${i}].estado='Cancelada';guardar();renderReservas()">X</button>
+</td></tr>`;
 });
 }
-function confirmar(i){reservas[i].estado="Confirmada";guardar();renderReservas();generarCalendario();}
 
 function agregarVenta(){
 ventas.push({cliente:clienteVenta.value,monto:parseFloat(montoVenta.value)});
@@ -317,44 +313,33 @@ tablaVentas.innerHTML+=`<tr><td>${v.cliente}</td><td>$${v.monto}</td></tr>`;
 });
 }
 
-/* CALENDARIO */
-let fechaActual=new Date();
-let mesActual=fechaActual.getMonth();
-let añoActual=fechaActual.getFullYear();
-
 function generarCalendario(){
-const calendario=document.getElementById("calendario");
 calendario.innerHTML="";
-const primerDia=new Date(añoActual,mesActual,1).getDay();
-const ultimoDia=new Date(añoActual,mesActual+1,0).getDate();
-mesActualTexto.innerText=new Date(añoActual,mesActual).toLocaleString("es-ES",{month:"long",year:"numeric"});
-for(let i=0;i<primerDia;i++){calendario.innerHTML+="<div></div>";}
-for(let dia=1;dia<=ultimoDia;dia++){
-let fechaCompleta=`${añoActual}-${String(mesActual+1).padStart(2,"0")}-${String(dia).padStart(2,"0")}`;
+let hoy=new Date();
+let mes=hoy.getMonth();
+let año=hoy.getFullYear();
+let dias=new Date(año,mes+1,0).getDate();
+for(let i=1;i<=dias;i++){
+let fecha=`${año}-${String(mes+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`;
 let div=document.createElement("div");
-div.innerText=dia;
-let reservasDia=reservas.filter(r=>r.fecha===fechaCompleta);
-if(reservasDia.length===0){div.classList.add("libre");}
-else if(reservasDia.length>=5){div.classList.add("lleno");}
-else{div.classList.add("ocupado");}
-div.addEventListener("click",()=>mostrarDetalleDia(fechaCompleta));
+div.innerText=i;
+let d=new Date(año,mes,i).getDay();
+if(d===0){div.classList.add("domingo");}
+else{
+let r=reservas.filter(res=>res.fecha===fecha);
+if(r.length===0)div.classList.add("libre");
+else if(r.length>=5)div.classList.add("lleno");
+else div.classList.add("ocupado");
+}
 calendario.appendChild(div);
 }
 }
-function cambiarMes(v){mesActual+=v;if(mesActual<0){mesActual=11;añoActual--;}if(mesActual>11){mesActual=0;añoActual++;}generarCalendario();}
-function mostrarDetalleDia(fecha){
-let reservasDia=reservas.filter(r=>r.fecha===fecha);
-if(reservasDia.length===0){detalleDia.innerHTML="<p>No hay reservas</p>";return;}
-let html="<ul>";
-reservasDia.forEach(r=>{html+=`<li><strong>${r.hora}</strong> - ${r.cliente} (${r.estado})</li>`});
-html+="</ul>";
-detalleDia.innerHTML=html;
-}
 
 renderClientes();
-renderProductos();
+renderServicios();
 renderReservas();
 renderVentas();
+cargarServicios();
 actualizarDashboard();
 generarCalendario();
 </script>
