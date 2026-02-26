@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Manicure PRO</title>
+<title>Valentina Nails | Demo PRO MAX</title>
 
 <link rel="manifest" href="manifest.json">
 
@@ -11,65 +11,149 @@
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#fdf2f8,#fbcfe8);
+overflow-x:hidden;
 }
 
-/* HEADER */
+/* ================= FONDO ANIMADO ================= */
+.auth-container{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#fce7f3,#fbcfe8,#f9a8d4);
+position:relative;
+overflow:hidden;
+}
+
+/* Burbujas */
+.bubble{
+position:absolute;
+bottom:-100px;
+background:rgba(255,255,255,0.3);
+border-radius:50%;
+animation:float 12s infinite ease-in;
+}
+
+@keyframes float{
+0%{transform:translateY(0) scale(1);}
+100%{transform:translateY(-110vh) scale(1.2);}
+}
+
+/* ================= CARD ================= */
+
+.auth-card{
+background:white;
+padding:40px;
+border-radius:30px;
+box-shadow:0 25px 50px rgba(0,0,0,0.2);
+width:360px;
+z-index:2;
+animation:iphoneIn 0.6s ease;
+}
+
+@keyframes iphoneIn{
+0%{opacity:0; transform:translateY(40px);}
+100%{opacity:1; transform:translateY(0);}
+}
+
+.logo{
+text-align:center;
+margin-bottom:20px;
+}
+
+.logo h1{
+margin:0;
+color:#ec4899;
+}
+
+.logo p{
+margin:5px 0 0;
+color:#777;
+font-size:14px;
+}
+
+/* Ilustración elegante */
+.illustration{
+font-size:60px;
+text-align:center;
+margin-bottom:15px;
+}
+
+/* Tabs */
+.tabs{
+display:flex;
+margin-bottom:20px;
+}
+
+.tabs button{
+flex:1;
+background:none;
+border:none;
+font-weight:bold;
+padding:8px;
+color:#aaa;
+cursor:pointer;
+}
+
+.tabs button.active{
+color:#ec4899;
+border-bottom:3px solid #ec4899;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.btn-main{
+width:100%;
+padding:10px;
+border:none;
+border-radius:12px;
+background:#ec4899;
+color:white;
+font-weight:bold;
+cursor:pointer;
+margin-bottom:8px;
+transition:0.2s;
+}
+
+.btn-main:hover{background:#db2777;}
+.btn-main:active{transform:scale(0.95);}
+
+.guest{
+background:#f3f4f6;
+color:#444;
+}
+
+.hidden{display:none;}
+
+/* ================= APP ================= */
+
 .header{
 background:#ec4899;
 color:white;
-padding:25px;
+padding:20px;
 text-align:center;
+animation:iphoneIn 0.5s ease;
 }
 
-/* CONTENEDOR */
 .container{
-max-width:1100px;
+max-width:1000px;
 margin:auto;
 padding:20px;
+animation:iphoneIn 0.6s ease;
 }
 
 .card{
 background:white;
 padding:20px;
 border-radius:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
 margin-bottom:20px;
-animation: fadeIn 0.4s ease;
-transition: transform 0.2s;
-}
-
-.card:hover{
-transform:translateY(-3px);
-}
-
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:15px;
-}
-
-button{
-padding:8px 12px;
-border:none;
-border-radius:10px;
-background:#ec4899;
-color:white;
-cursor:pointer;
-margin:3px;
-transition:all 0.2s ease;
-}
-
-button:hover{background:#db2777;}
-button:active{transform:scale(0.95);}
-
-input{
-padding:8px;
-border-radius:8px;
-border:1px solid #ddd;
-margin-bottom:8px;
-width:100%;
 }
 
 .calendar{
@@ -84,12 +168,10 @@ border-radius:10px;
 text-align:center;
 font-weight:bold;
 cursor:pointer;
+background:#fce7f3;
 }
 
-.disponible-dia{background:#bbf7d0;}
-.parcial-dia{background:#fbcfe8;}
-.lleno-dia{background:#f87171;color:white;}
-.bloqueado-dia{background:#444;color:white;}
+.day:hover{background:#f9a8d4;}
 
 .horas{
 display:grid;
@@ -98,17 +180,16 @@ gap:6px;
 margin-top:10px;
 }
 
-.hora-btn{
+button.small{
 padding:6px;
 border-radius:8px;
 border:none;
+background:#fbcfe8;
+cursor:pointer;
 }
 
-.disponible{background:#fbcfe8;}
-.ocupado{background:#ddd;cursor:not-allowed;}
+.admin-delete{background:#ef4444;color:white;}
 
-.hidden{display:none;}
-.admin-delete{background:#ef4444;}
 .stat-box{
 background:#fdf2f8;
 padding:10px;
@@ -116,66 +197,82 @@ border-radius:10px;
 margin-bottom:8px;
 }
 
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(10px);}
-to{opacity:1;transform:translateY(0);}
-}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginView" class="card" style="max-width:400px;margin:80px auto;">
-<h2>Ingreso</h2>
-<input type="text" id="usuario" placeholder="Usuario">
-<input type="password" id="clave" placeholder="Contraseña">
-<button onclick="login()">Ingresar</button>
+<!-- ================= AUTH ================= -->
+<div id="authView" class="auth-container">
 
-<h3>Crear Cuenta</h3>
-<input type="text" id="nuevoUsuario" placeholder="Nombre completo">
-<input type="password" id="nuevaClave" placeholder="Contraseña">
-<button onclick="registrar()">Registrarse</button>
+<!-- Burbujas -->
+<script>
+for(let i=0;i<15;i++){
+let bubble=document.createElement("div");
+bubble.className="bubble";
+bubble.style.left=Math.random()*100+"%";
+bubble.style.width=bubble.style.height=(20+Math.random()*60)+"px";
+bubble.style.animationDuration=(8+Math.random()*10)+"s";
+document.body.appendChild(bubble);
+}
+</script>
+
+<div class="auth-card">
+
+<div class="illustration">💅✨</div>
+
+<div class="logo">
+<h1>Valentina Nails</h1>
+<p>Demo Profesional de Agenda</p>
 </div>
 
-<!-- APP -->
+<div class="tabs">
+<button id="btnLogin" class="active" onclick="mostrarLogin()">Ingresar</button>
+<button id="btnRegistro" onclick="mostrarRegistro()">Crear Cuenta</button>
+</div>
+
+<div id="loginForm">
+<input type="text" id="usuario" placeholder="Usuario">
+<input type="password" id="clave" placeholder="Contraseña">
+<button class="btn-main" onclick="login()">Ingresar</button>
+<button class="btn-main guest" onclick="entrarInvitado()">Continuar como invitado</button>
+<p style="font-size:12px;text-align:center;color:#777;">
+Admin demo: admin / 1234
+</p>
+</div>
+
+<div id="registroForm" class="hidden">
+<input type="text" id="nuevoUsuario" placeholder="Nombre completo">
+<input type="password" id="nuevaClave" placeholder="Contraseña">
+<button class="btn-main" onclick="registrar()">Crear Cuenta</button>
+</div>
+
+</div>
+</div>
+
+<!-- ================= APP ================= -->
 <div id="appView" class="hidden">
 
 <div class="header">
-<p>Agenda Profesional PRO+ 💅</p>
+<h2>Valentina Nails Studio</h2>
+<p id="saludo"></p>
+<button onclick="logout()" style="margin-top:10px;background:white;color:#ec4899;">Cerrar sesión</button>
 </div>
 
 <div class="container">
 
-<div class="topbar">
-<h3 id="rolTitulo"></h3>
-<button onclick="logout()">Salir</button>
-</div>
-
 <div class="card">
-<div class="topbar">
-<button onclick="cambiarMes(-1)">←</button>
 <h3 id="mesActual"></h3>
-<button onclick="cambiarMes(1)">→</button>
-</div>
 <div class="calendar" id="calendar"></div>
 </div>
 
 <div id="clientePanel" class="card hidden"></div>
 
-<div id="adminPanel" class="hidden">
-
-<div class="card">
-<h3>Estadísticas del mes</h3>
+<div id="adminPanel" class="card hidden">
+<h3>Panel Administrador</h3>
 <div id="estadisticas"></div>
 <button onclick="exportarPDF()">Exportar PDF</button>
-</div>
-
-<div class="card">
-<h3>Reservas</h3>
 <ul id="listaAdmin"></ul>
-</div>
-
 </div>
 
 </div>
@@ -184,138 +281,126 @@ to{opacity:1;transform:translateY(0);}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
+
+/* ======= DATA ======= */
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[
 {usuario:"admin",clave:"1234",rol:"admin"}
 ];
 
 let reservas=JSON.parse(localStorage.getItem("reservas"))||[];
-let sesion=null;
+let sesion=JSON.parse(localStorage.getItem("sesion"));
 let fechaActual=new Date();
 let precioBase=15000;
 
+/* ======= AUTO LOGIN ======= */
+if(sesion){
+mostrarApp();
+}
+
+/* ======= AUTH ======= */
+function mostrarLogin(){
+loginForm.classList.remove("hidden");
+registroForm.classList.add("hidden");
+btnLogin.classList.add("active");
+btnRegistro.classList.remove("active");
+}
+
+function mostrarRegistro(){
+registroForm.classList.remove("hidden");
+loginForm.classList.add("hidden");
+btnRegistro.classList.add("active");
+btnLogin.classList.remove("active");
+}
+
 function registrar(){
-const usuario=document.getElementById("nuevoUsuario").value;
-const clave=document.getElementById("nuevaClave").value;
+let usuario=nuevoUsuario.value;
+let clave=nuevaClave.value;
 if(!usuario||!clave)return alert("Completa datos");
 usuarios.push({usuario,clave,rol:"cliente"});
 localStorage.setItem("usuarios",JSON.stringify(usuarios));
 alert("Cuenta creada 💅");
+mostrarLogin();
 }
 
 function login(){
-const u=document.getElementById("usuario").value;
-const c=document.getElementById("clave").value;
-const user=usuarios.find(x=>x.usuario===u&&x.clave===c);
+let user=usuarios.find(u=>u.usuario===usuario.value&&u.clave===clave.value);
 if(!user)return alert("Datos incorrectos");
 sesion=user;
-document.getElementById("loginView").classList.add("hidden");
-document.getElementById("appView").classList.remove("hidden");
-document.getElementById("rolTitulo").textContent=
-user.rol==="admin"?"Panel Administrador":"Panel Cliente";
+localStorage.setItem("sesion",JSON.stringify(sesion));
+mostrarApp();
+}
+
+function entrarInvitado(){
+sesion={usuario:"Invitado",rol:"cliente"};
+mostrarApp();
+}
+
+function logout(){
+localStorage.removeItem("sesion");
+location.reload();
+}
+
+/* ======= APP ======= */
+function mostrarApp(){
+authView.classList.add("hidden");
+appView.classList.remove("hidden");
+saludo.textContent="Bienvenida "+sesion.usuario+" 💖";
 generarCalendario();
-if(user.rol==="admin"){
-document.getElementById("adminPanel").classList.remove("hidden");
+if(sesion.rol==="admin"){
+adminPanel.classList.remove("hidden");
 mostrarReservasAdmin();
 estadisticas();
 }
 }
 
-function logout(){location.reload();}
-
-/* CALENDARIO */
+/* ======= CALENDARIO ======= */
 function generarCalendario(){
-const calendar=document.getElementById("calendar");
 calendar.innerHTML="";
-const año=fechaActual.getFullYear();
-const mes=fechaActual.getMonth();
-const dias=new Date(año,mes+1,0).getDate();
-document.getElementById("mesActual").textContent=
-fechaActual.toLocaleString('es-ES',{month:'long',year:'numeric'});
+let año=fechaActual.getFullYear();
+let mes=fechaActual.getMonth();
+let dias=new Date(año,mes+1,0).getDate();
+mesActual.textContent=fechaActual.toLocaleString('es-ES',{month:'long',year:'numeric'});
 
 for(let i=1;i<=dias;i++){
 let fecha=`${año}-${String(mes+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-let reservasDia=reservas.filter(r=>r.fecha===fecha).length;
-
 let div=document.createElement("div");
+div.className="day";
 div.textContent=i;
-div.classList.add("day");
-
-if(reservasDia===0){
-div.classList.add("disponible-dia");
-}else{
-div.classList.add("parcial-dia");
-}
-
 if(sesion.rol==="cliente"){
 div.onclick=()=>abrirAgenda(fecha);
 }
-
 calendar.appendChild(div);
 }
 }
 
-function cambiarMes(valor){
-fechaActual.setMonth(fechaActual.getMonth()+valor);
-generarCalendario();
-estadisticas();
-}
-
-/* AGENDA CLIENTE */
 function abrirAgenda(fecha){
-document.getElementById("clientePanel").classList.remove("hidden");
-document.getElementById("clientePanel").innerHTML=`
+clientePanel.classList.remove("hidden");
+clientePanel.innerHTML=`
 <h3>Agendar para ${fecha}</h3>
 <input type="text" id="nombreCliente" placeholder="Tu nombre">
-<button onclick="mostrarHoras('${fecha}')">Ver Horas</button>
-<div class="horas" id="horasContainer"></div>
+<div class="horas">
+<button class="small" onclick="reservar('${fecha}','10:00')">10:00</button>
+<button class="small" onclick="reservar('${fecha}','12:00')">12:00</button>
+<button class="small" onclick="reservar('${fecha}','15:00')">15:00</button>
+</div>
 `;
-}
-
-function mostrarHoras(fecha){
-const horas=["10:00","11:00","12:00","14:00","15:00","16:00"];
-const container=document.getElementById("horasContainer");
-container.innerHTML="";
-horas.forEach(hora=>{
-let ocupado=reservas.find(r=>r.fecha===fecha&&r.hora===hora);
-let btn=document.createElement("button");
-btn.textContent=hora;
-btn.classList.add("hora-btn");
-if(ocupado){
-btn.classList.add("ocupado");
-btn.disabled=true;
-}else{
-btn.classList.add("disponible");
-btn.onclick=()=>reservar(fecha,hora);
-}
-container.appendChild(btn);
-});
 }
 
 function reservar(fecha,hora){
-const nombre=document.getElementById("nombreCliente").value;
-if(!nombre)return alert("Ingresa tu nombre");
-
-reservas.push({
-cliente:nombre,
-fecha,
-hora,
-precio:precioBase
-});
-
+let nombre=document.getElementById("nombreCliente").value||sesion.usuario;
+reservas.push({cliente:nombre,fecha,hora,precio:precioBase});
 localStorage.setItem("reservas",JSON.stringify(reservas));
 alert("Reserva confirmada 💅");
-generarCalendario();
 }
 
-/* ADMIN */
+/* ======= ADMIN ======= */
 function mostrarReservasAdmin(){
-const lista=document.getElementById("listaAdmin");
-lista.innerHTML="";
+listaAdmin.innerHTML="";
 reservas.forEach((r,i)=>{
-lista.innerHTML+=`
+listaAdmin.innerHTML+=`
 <li>${r.cliente} - ${r.fecha} ${r.hora} - $${r.precio}
-<br><button class="admin-delete" onclick="eliminar(${i})">Eliminar</button></li>
-`;
+<button class="admin-delete" onclick="eliminar(${i})">X</button>
+</li>`;
 });
 }
 
@@ -323,43 +408,33 @@ function eliminar(i){
 reservas.splice(i,1);
 localStorage.setItem("reservas",JSON.stringify(reservas));
 mostrarReservasAdmin();
-generarCalendario();
 estadisticas();
 }
 
-/* ESTADISTICAS */
 function estadisticas(){
-const año=fechaActual.getFullYear();
-const mes=fechaActual.getMonth()+1;
-let reservasMes=reservas.filter(r=>
-r.fecha.startsWith(`${año}-${String(mes).padStart(2,'0')}`)
-);
-let total=reservasMes.length;
-let ingresos=reservasMes.reduce((acc,r)=>acc+r.precio,0);
-
-document.getElementById("estadisticas").innerHTML=`
-<div class="stat-box">Reservas: <strong>${total}</strong></div>
-<div class="stat-box">Ingresos simulados: <strong>$${ingresos.toLocaleString()}</strong></div>
+let mes=String(fechaActual.getMonth()+1).padStart(2,'0');
+let año=fechaActual.getFullYear();
+let reservasMes=reservas.filter(r=>r.fecha.startsWith(`${año}-${mes}`));
+let ingresos=reservasMes.reduce((a,b)=>a+b.precio,0);
+estadisticas.innerHTML=`
+<div class="stat-box">Reservas: ${reservasMes.length}</div>
+<div class="stat-box">Ingresos simulados: $${ingresos.toLocaleString()}</div>
 `;
 }
 
-/* EXPORTAR PDF */
+/* ======= PDF ======= */
 function exportarPDF(){
 const { jsPDF } = window.jspdf;
-const doc = new jsPDF();
-doc.text("Valentina Nails - Reservas",10,10);
+let doc=new jsPDF();
+doc.text("Valentina Nails - Demo Reservas",10,10);
 let y=20;
 reservas.forEach(r=>{
 doc.text(`${r.cliente} - ${r.fecha} ${r.hora}`,10,y);
 y+=10;
 });
-doc.save("reservas.pdf");
+doc.save("demo-reservas.pdf");
 }
 
-/* PWA */
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("service-worker.js");
-}
 </script>
 
 </body>
