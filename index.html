@@ -1,62 +1,281 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Reserva Manicura Premium</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Valentina Nails | Agenda Profesional</title>
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#fdf2f8,#fbcfe8);
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px;
+  background:#ec4899;
+  color:white;
+}
+
+/* CONTENEDOR */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  margin-bottom:20px;
+}
+
+button{
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  background:#ec4899;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover{ background:#db2777; }
+
+input{
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  width:100%;
+  margin-bottom:10px;
+}
+
+/* CALENDARIO */
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:10px;
+}
+
+.day{
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.disponible-dia{ background:#bbf7d0; }   /* verde */
+.parcial-dia{ background:#fbcfe8; }      /* rosado */
+.lleno-dia{ background:#f87171; color:white; } /* rojo */
+.inactivo{ background:#eee; cursor:not-allowed; }
+
+/* HORAS */
+.horas{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:15px;
+}
+
+.hora-btn{
+  padding:8px;
+  border-radius:8px;
+  border:none;
+}
+
+.disponible{
+  background:#fbcfe8;
+}
+
+.ocupado{
+  background:#ddd;
+  cursor:not-allowed;
+}
+
+.hidden{ display:none; }
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.admin-delete{
+  background:#ef4444;
+  margin-top:5px;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="container">
+<!-- LOGIN -->
+<div id="loginView" class="card" style="max-width:400px;margin:80px auto;">
+<h2>Ingreso</h2>
+<input type="text" id="usuario" placeholder="Usuario">
+<input type="password" id="clave" placeholder="Contraseña">
+<button onclick="login()">Ingresar</button>
+<p>Cliente: cliente / 1234<br>Admin: admin / 1234</p>
+</div>
 
-    <!-- Perfil Profesional -->
-    <div class="card perfil">
-      <img src="https://i.imgur.com/2DhmtJ4.png" class="avatar">
-      <h2>Valentina Nails Studio</h2>
-      <p>Especialista en manicura rusa, esmaltado permanente y diseño a mano alzada.</p>
-      <div class="info">
-        <span>📍 Servicio a domicilio</span>
-        <span>⭐ 4.9 (120 reseñas)</span>
-      </div>
-    </div>
+<!-- APP -->
+<div id="appView" class="hidden">
 
-    <!-- Botón Agendar -->
-    <button class="btn-agendar" onclick="abrirModal()">
-      Agendar Hora
-    </button>
+<div class="header">
+<h1>Valentina Nails Studio</h1>
+<p>Agenda Profesional Online 💅</p>
+</div>
 
-    <!-- Reservas -->
-    <div class="card reservas">
-      <h3>Reservas Confirmadas</h3>
-      <ul id="listaReservas"></ul>
-    </div>
+<div class="container">
 
-  </div>
+<div class="topbar">
+<h3 id="rolTitulo"></h3>
+<button onclick="logout()">Salir</button>
+</div>
 
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <h2>Agendar Cita</h2>
+<!-- CALENDARIO -->
+<div class="card">
+<h3>Disponibilidad Mensual</h3>
+<div class="calendar" id="calendar"></div>
+</div>
 
-      <label>Nombre</label>
-      <input type="text" id="nombre">
+<!-- HORAS CLIENTE -->
+<div id="clientePanel" class="card hidden">
+<h3>Horas disponibles</h3>
+<div class="horas" id="horasContainer"></div>
+</div>
 
-      <label>Fecha</label>
-      <input type="date" id="fecha">
+<!-- ADMIN -->
+<div id="adminPanel" class="card hidden">
+<h3>Reservas</h3>
+<ul id="listaAdmin"></ul>
+</div>
 
-      <label>Hora</label>
-      <input type="time" id="hora">
+</div>
+</div>
 
-      <button class="btn-confirmar" onclick="guardarReserva()">
-        Confirmar Reserva
-      </button>
+<script>
+const usuarios=[
+{usuario:"cliente",clave:"1234",rol:"cliente"},
+{usuario:"admin",clave:"1234",rol:"admin"}
+];
 
-      <button class="btn-cerrar" onclick="cerrarModal()">
-        Cancelar
-      </button>
-    </div>
-  </div>
+let reservas=JSON.parse(localStorage.getItem("reservas"))||[];
+let sesion=null;
 
-<script src="app.js"></script>
+const horasDisponibles=["10:00","11:00","12:00","14:00","15:00","16:00","17:00"];
+
+function login(){
+const u=document.getElementById("usuario").value;
+const c=document.getElementById("clave").value;
+const user=usuarios.find(x=>x.usuario===u&&x.clave===c);
+if(!user){alert("Datos incorrectos");return;}
+sesion=user;
+document.getElementById("loginView").classList.add("hidden");
+document.getElementById("appView").classList.remove("hidden");
+document.getElementById("rolTitulo").textContent=
+user.rol==="admin"?"Panel Administrador":"Panel Cliente";
+
+generarCalendario();
+
+if(user.rol==="admin"){
+document.getElementById("adminPanel").classList.remove("hidden");
+mostrarReservasAdmin();
+}
+}
+
+function logout(){location.reload();}
+
+/* CALENDARIO MENSUAL */
+function generarCalendario(){
+const calendar=document.getElementById("calendar");
+calendar.innerHTML="";
+const hoy=new Date();
+const año=hoy.getFullYear();
+const mes=hoy.getMonth();
+const dias=new Date(año,mes+1,0).getDate();
+
+for(let i=1;i<=dias;i++){
+let fecha=`${año}-${String(mes+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+let reservasDia=reservas.filter(r=>r.fecha===fecha).length;
+
+let div=document.createElement("div");
+div.textContent=i;
+div.classList.add("day");
+
+if(new Date(fecha)<new Date().setHours(0,0,0,0)){
+div.classList.add("inactivo");
+}else if(reservasDia===0){
+div.classList.add("disponible-dia");
+div.onclick=()=>mostrarHoras(fecha);
+}else if(reservasDia<horasDisponibles.length){
+div.classList.add("parcial-dia");
+div.onclick=()=>mostrarHoras(fecha);
+}else{
+div.classList.add("lleno-dia");
+}
+
+calendar.appendChild(div);
+}
+}
+
+/* MOSTRAR HORAS */
+function mostrarHoras(fecha){
+if(sesion.rol!=="cliente")return;
+
+document.getElementById("clientePanel").classList.remove("hidden");
+const container=document.getElementById("horasContainer");
+container.innerHTML="";
+
+horasDisponibles.forEach(hora=>{
+let ocupado=reservas.find(r=>r.fecha===fecha&&r.hora===hora);
+let btn=document.createElement("button");
+btn.textContent=hora;
+btn.classList.add("hora-btn");
+
+if(ocupado){
+btn.classList.add("ocupado");
+btn.disabled=true;
+}else{
+btn.classList.add("disponible");
+btn.onclick=()=>reservar(fecha,hora);
+}
+container.appendChild(btn);
+});
+}
+
+/* RESERVAR */
+function reservar(fecha,hora){
+reservas.push({cliente:sesion.usuario,fecha,hora});
+localStorage.setItem("reservas",JSON.stringify(reservas));
+alert("Reserva confirmada 💅✨");
+generarCalendario();
+mostrarHoras(fecha);
+}
+
+/* ADMIN */
+function mostrarReservasAdmin(){
+const lista=document.getElementById("listaAdmin");
+lista.innerHTML="";
+reservas.forEach((r,i)=>{
+const li=document.createElement("li");
+li.innerHTML=`${r.cliente} - ${r.fecha} ${r.hora}
+<br><button class="admin-delete" onclick="eliminar(${i})">Eliminar</button>`;
+lista.appendChild(li);
+});
+}
+
+function eliminar(i){
+reservas.splice(i,1);
+localStorage.setItem("reservas",JSON.stringify(reservas));
+mostrarReservasAdmin();
+generarCalendario();
+}
+</script>
+
 </body>
 </html>
