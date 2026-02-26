@@ -2,7 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Valentina Nails | Agenda PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Manicure PRO</title>
+
+<link rel="manifest" href="manifest.json">
 
 <style>
 body{
@@ -32,6 +35,12 @@ padding:20px;
 border-radius:20px;
 box-shadow:0 10px 25px rgba(0,0,0,0.08);
 margin-bottom:20px;
+animation: fadeIn 0.4s ease;
+transition: transform 0.2s;
+}
+
+.card:hover{
+transform:translateY(-3px);
 }
 
 .topbar{
@@ -49,23 +58,24 @@ background:#ec4899;
 color:white;
 cursor:pointer;
 margin:3px;
+transition:all 0.2s ease;
 }
 
 button:hover{background:#db2777;}
+button:active{transform:scale(0.95);}
 
 input{
 padding:8px;
 border-radius:8px;
 border:1px solid #ddd;
 margin-bottom:8px;
+width:100%;
 }
 
-/* CALENDARIO */
 .calendar{
 display:grid;
 grid-template-columns:repeat(7,1fr);
 gap:8px;
-margin-top:10px;
 }
 
 .day{
@@ -80,11 +90,10 @@ cursor:pointer;
 .parcial-dia{background:#fbcfe8;}
 .lleno-dia{background:#f87171;color:white;}
 .bloqueado-dia{background:#444;color:white;}
-.inactivo{background:#eee;cursor:not-allowed;}
 
 .horas{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(3,1fr);
 gap:6px;
 margin-top:10px;
 }
@@ -99,14 +108,17 @@ border:none;
 .ocupado{background:#ddd;cursor:not-allowed;}
 
 .hidden{display:none;}
-
 .admin-delete{background:#ef4444;}
-.admin-block{background:#444;}
 .stat-box{
 background:#fdf2f8;
 padding:10px;
 border-radius:10px;
 margin-bottom:8px;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
 }
 </style>
 </head>
@@ -119,15 +131,18 @@ margin-bottom:8px;
 <input type="text" id="usuario" placeholder="Usuario">
 <input type="password" id="clave" placeholder="Contraseña">
 <button onclick="login()">Ingresar</button>
-<p>Cliente: cliente / 1234<br>Admin: admin / 1234</p>
+
+<h3>Crear Cuenta</h3>
+<input type="text" id="nuevoUsuario" placeholder="Nombre completo">
+<input type="password" id="nuevaClave" placeholder="Contraseña">
+<button onclick="registrar()">Registrarse</button>
 </div>
 
 <!-- APP -->
 <div id="appView" class="hidden">
 
 <div class="header">
-<h1>Valentina Nails Studio</h1>
-<p>Agenda Profesional Avanzada 💅</p>
+<p>Agenda Profesional PRO+ 💅</p>
 </div>
 
 <div class="container">
@@ -137,7 +152,6 @@ margin-bottom:8px;
 <button onclick="logout()">Salir</button>
 </div>
 
-<!-- NAVEGADOR MES -->
 <div class="card">
 <div class="topbar">
 <button onclick="cambiarMes(-1)">←</button>
@@ -147,31 +161,14 @@ margin-bottom:8px;
 <div class="calendar" id="calendar"></div>
 </div>
 
-<!-- HORAS CLIENTE -->
-<div id="clientePanel" class="card hidden">
-<h3>Horas disponibles</h3>
-<div class="horas" id="horasContainer"></div>
-</div>
+<div id="clientePanel" class="card hidden"></div>
 
-<!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
 
 <div class="card">
 <h3>Estadísticas del mes</h3>
 <div id="estadisticas"></div>
-</div>
-
-<div class="card">
-<h3>Bloquear día completo</h3>
-<input type="date" id="bloquearFecha">
-<button class="admin-block" onclick="bloquearDia()">Bloquear Día</button>
-</div>
-
-<div class="card">
-<h3>Gestión Horarios</h3>
-<input type="time" id="nuevaHora">
-<button onclick="agregarHora()">Agregar Hora</button>
-<ul id="listaHoras"></ul>
+<button onclick="exportarPDF()">Exportar PDF</button>
 </div>
 
 <div class="card">
@@ -184,37 +181,41 @@ margin-bottom:8px;
 </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
-const usuarios=[
-{usuario:"cliente",clave:"1234",rol:"cliente"},
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[
 {usuario:"admin",clave:"1234",rol:"admin"}
 ];
 
 let reservas=JSON.parse(localStorage.getItem("reservas"))||[];
-let diasBloqueados=JSON.parse(localStorage.getItem("bloqueados"))||[];
-let horasDisponibles=JSON.parse(localStorage.getItem("horas"))||
-["10:00","11:00","12:00","14:00","15:00","16:00"];
-
 let sesion=null;
 let fechaActual=new Date();
+let precioBase=15000;
+
+function registrar(){
+const usuario=document.getElementById("nuevoUsuario").value;
+const clave=document.getElementById("nuevaClave").value;
+if(!usuario||!clave)return alert("Completa datos");
+usuarios.push({usuario,clave,rol:"cliente"});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+alert("Cuenta creada 💅");
+}
 
 function login(){
 const u=document.getElementById("usuario").value;
 const c=document.getElementById("clave").value;
 const user=usuarios.find(x=>x.usuario===u&&x.clave===c);
-if(!user){alert("Datos incorrectos");return;}
+if(!user)return alert("Datos incorrectos");
 sesion=user;
 document.getElementById("loginView").classList.add("hidden");
 document.getElementById("appView").classList.remove("hidden");
 document.getElementById("rolTitulo").textContent=
 user.rol==="admin"?"Panel Administrador":"Panel Cliente";
-
 generarCalendario();
-
 if(user.rol==="admin"){
 document.getElementById("adminPanel").classList.remove("hidden");
 mostrarReservasAdmin();
-mostrarHorasAdmin();
 estadisticas();
 }
 }
@@ -239,18 +240,14 @@ let div=document.createElement("div");
 div.textContent=i;
 div.classList.add("day");
 
-if(diasBloqueados.includes(fecha)){
-div.classList.add("bloqueado-dia");
-}else if(reservasDia===0){
+if(reservasDia===0){
 div.classList.add("disponible-dia");
-}else if(reservasDia<horasDisponibles.length){
-div.classList.add("parcial-dia");
 }else{
-div.classList.add("lleno-dia");
+div.classList.add("parcial-dia");
 }
 
-if(sesion && sesion.rol==="cliente" && !diasBloqueados.includes(fecha)){
-div.onclick=()=>mostrarHoras(fecha);
+if(sesion.rol==="cliente"){
+div.onclick=()=>abrirAgenda(fecha);
 }
 
 calendar.appendChild(div);
@@ -260,15 +257,25 @@ calendar.appendChild(div);
 function cambiarMes(valor){
 fechaActual.setMonth(fechaActual.getMonth()+valor);
 generarCalendario();
-if(sesion && sesion.rol==="admin") estadisticas();
+estadisticas();
 }
 
-/* CLIENTE HORAS */
-function mostrarHoras(fecha){
+/* AGENDA CLIENTE */
+function abrirAgenda(fecha){
 document.getElementById("clientePanel").classList.remove("hidden");
+document.getElementById("clientePanel").innerHTML=`
+<h3>Agendar para ${fecha}</h3>
+<input type="text" id="nombreCliente" placeholder="Tu nombre">
+<button onclick="mostrarHoras('${fecha}')">Ver Horas</button>
+<div class="horas" id="horasContainer"></div>
+`;
+}
+
+function mostrarHoras(fecha){
+const horas=["10:00","11:00","12:00","14:00","15:00","16:00"];
 const container=document.getElementById("horasContainer");
 container.innerHTML="";
-horasDisponibles.forEach(hora=>{
+horas.forEach(hora=>{
 let ocupado=reservas.find(r=>r.fecha===fecha&&r.hora===hora);
 let btn=document.createElement("button");
 btn.textContent=hora;
@@ -285,7 +292,16 @@ container.appendChild(btn);
 }
 
 function reservar(fecha,hora){
-reservas.push({cliente:sesion.usuario,fecha,hora});
+const nombre=document.getElementById("nombreCliente").value;
+if(!nombre)return alert("Ingresa tu nombre");
+
+reservas.push({
+cliente:nombre,
+fecha,
+hora,
+precio:precioBase
+});
+
 localStorage.setItem("reservas",JSON.stringify(reservas));
 alert("Reserva confirmada 💅");
 generarCalendario();
@@ -296,10 +312,10 @@ function mostrarReservasAdmin(){
 const lista=document.getElementById("listaAdmin");
 lista.innerHTML="";
 reservas.forEach((r,i)=>{
-const li=document.createElement("li");
-li.innerHTML=`${r.cliente} - ${r.fecha} ${r.hora}
-<br><button class="admin-delete" onclick="eliminar(${i})">Eliminar</button>`;
-lista.appendChild(li);
+lista.innerHTML+=`
+<li>${r.cliente} - ${r.fecha} ${r.hora} - $${r.precio}
+<br><button class="admin-delete" onclick="eliminar(${i})">Eliminar</button></li>
+`;
 });
 }
 
@@ -311,48 +327,38 @@ generarCalendario();
 estadisticas();
 }
 
-function bloquearDia(){
-const fecha=document.getElementById("bloquearFecha").value;
-if(!fecha)return;
-diasBloqueados.push(fecha);
-localStorage.setItem("bloqueados",JSON.stringify(diasBloqueados));
-generarCalendario();
-}
-
-function agregarHora(){
-const hora=document.getElementById("nuevaHora").value;
-if(!hora)return;
-horasDisponibles.push(hora);
-localStorage.setItem("horas",JSON.stringify(horasDisponibles));
-mostrarHorasAdmin();
-generarCalendario();
-}
-
-function mostrarHorasAdmin(){
-const lista=document.getElementById("listaHoras");
-lista.innerHTML="";
-horasDisponibles.forEach((h,i)=>{
-const li=document.createElement("li");
-li.innerHTML=`${h}
-<button class="admin-delete" onclick="eliminarHora(${i})">X</button>`;
-lista.appendChild(li);
-});
-}
-
-function eliminarHora(i){
-horasDisponibles.splice(i,1);
-localStorage.setItem("horas",JSON.stringify(horasDisponibles));
-mostrarHorasAdmin();
-generarCalendario();
-}
-
 /* ESTADISTICAS */
 function estadisticas(){
 const año=fechaActual.getFullYear();
 const mes=fechaActual.getMonth()+1;
-let total=reservas.filter(r=>r.fecha.startsWith(`${año}-${String(mes).padStart(2,'0')}`)).length;
-document.getElementById("estadisticas").innerHTML=
-`<div class="stat-box">Total reservas del mes: <strong>${total}</strong></div>`;
+let reservasMes=reservas.filter(r=>
+r.fecha.startsWith(`${año}-${String(mes).padStart(2,'0')}`)
+);
+let total=reservasMes.length;
+let ingresos=reservasMes.reduce((acc,r)=>acc+r.precio,0);
+
+document.getElementById("estadisticas").innerHTML=`
+<div class="stat-box">Reservas: <strong>${total}</strong></div>
+<div class="stat-box">Ingresos simulados: <strong>$${ingresos.toLocaleString()}</strong></div>
+`;
+}
+
+/* EXPORTAR PDF */
+function exportarPDF(){
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+doc.text("Valentina Nails - Reservas",10,10);
+let y=20;
+reservas.forEach(r=>{
+doc.text(`${r.cliente} - ${r.fecha} ${r.hora}`,10,y);
+y+=10;
+});
+doc.save("reservas.pdf");
+}
+
+/* PWA */
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("service-worker.js");
 }
 </script>
 
