@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manicure Pro - Nivel 10</title>
+<title>Manicure Pro - Nivel 12</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -12,16 +12,11 @@
 body{display:flex;height:100vh;background:#fff0f6;transition:.3s}
 
 /* DARK MODE */
-body.dark{
-background:#1f2937;
-color:white;
-}
+body.dark{background:#1f2937;color:white;}
 body.dark .card,
 body.dark table,
-body.dark input{
-background:#374151;
-color:white;
-}
+body.dark input,
+body.dark .calendario-container{background:#374151;color:white;}
 body.dark th{background:#4b5563}
 
 /* LOGIN */
@@ -43,7 +38,6 @@ width:320px;text-align:center;
 width:240px;background:#ec4899;color:white;
 padding:20px;display:flex;flex-direction:column;
 }
-.sidebar h2{margin-bottom:20px}
 .sidebar button{
 background:none;border:none;color:white;
 text-align:left;padding:12px;margin-bottom:5px;
@@ -72,7 +66,6 @@ gap:20px;margin-bottom:30px;
 background:white;padding:20px;border-radius:16px;
 box-shadow:0 4px 15px rgba(236,72,153,.2);
 }
-.card h3{font-size:14px;color:#6b7280}
 .card p{font-size:28px;font-weight:700;color:#ec4899}
 
 /* Tables */
@@ -97,9 +90,45 @@ padding:10px 15px;border-radius:8px;cursor:pointer;margin-top:5px;
 button.success{background:#10b981;color:white;border:none;padding:6px 10px;border-radius:6px}
 button.danger{background:#ef4444;color:white;border:none;padding:6px 10px;border-radius:6px}
 
-.topActions{
-display:flex;gap:10px;margin-bottom:20px;
+/* CALENDARIO */
+.calendario-container{
+background:white;
+padding:20px;
+border-radius:16px;
+margin-top:20px;
+box-shadow:0 4px 15px rgba(236,72,153,.2);
 }
+.calendario-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:#ec4899;
+}
+.calendario-header button{
+background:#ec4899;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+}
+.dias-semana, .calendario-grid{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+text-align:center;
+margin-top:10px;
+}
+.calendario-grid div{
+padding:10px;
+margin:4px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+}
+.libre{background:#d1fae5}
+.ocupado{background:#fecaca}
+.lleno{background:#ef4444;color:white}
+.hoy{border:2px solid #ec4899}
 </style>
 </head>
 <body>
@@ -135,7 +164,6 @@ display:flex;gap:10px;margin-bottom:20px;
 <div class="card"><h3>Ventas</h3><p id="totalVentas">0</p></div>
 <div class="card"><h3>Ingresos</h3><p id="totalIngresos">$0</p></div>
 </div>
-
 <canvas id="graficoVentas"></canvas>
 </section>
 
@@ -165,13 +193,29 @@ display:flex;gap:10px;margin-bottom:20px;
 <button class="primary" onclick="agregarReserva()">Agendar</button>
 <table><thead><tr><th>Cliente</th><th>Fecha</th><th>Hora</th><th>Estado</th><th></th></tr></thead>
 <tbody id="tablaReservas"></tbody></table>
+
+<hr style="margin:30px 0">
+
+<h2>📅 Calendario de Reservas</h2>
+<div class="calendario-container">
+<div class="calendario-header">
+<button onclick="cambiarMes(-1)">◀</button>
+<h3 id="mesActual"></h3>
+<button onclick="cambiarMes(1)">▶</button>
+</div>
+<div class="dias-semana">
+<div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
+</div>
+<div id="calendario" class="calendario-grid"></div>
+</div>
+
+<h3 style="margin-top:20px">📋 Reservas del día seleccionado</h3>
+<div id="detalleDia"></div>
+
 </section>
 
 <section id="ventas" class="section">
 <h1>Ventas</h1>
-<div class="topActions">
-<button class="primary" onclick="exportarPDF()">Exportar PDF</button>
-</div>
 <input id="clienteVenta" placeholder="Cliente">
 <input id="montoVenta" type="number" placeholder="Monto">
 <button class="primary" onclick="agregarVenta()">Registrar Venta</button>
@@ -220,11 +264,9 @@ totalVentas.innerText=ventas.length;
 let total=ventas.reduce((a,b)=>a+b.monto,0);
 totalIngresos.innerText="$"+total;
 reporteIngresos.innerText="$"+total;
-actualizarGrafico();
 }
 
 function agregarCliente(){
-if(!nombreCliente.value||!telefonoCliente.value)return alert("Complete datos");
 clientes.push({nombre:nombreCliente.value,telefono:telefonoCliente.value});
 guardar();renderClientes();actualizarDashboard();
 nombreCliente.value="";telefonoCliente.value="";
@@ -238,7 +280,6 @@ tablaClientes.innerHTML+=`<tr><td>${c.nombre}</td><td>${c.telefono}</td><td><but
 function eliminarCliente(i){clientes.splice(i,1);guardar();renderClientes();actualizarDashboard();}
 
 function agregarProducto(){
-if(!nombreProducto.value||!precioProducto.value)return alert("Complete datos");
 productos.push({nombre:nombreProducto.value,precio:parseFloat(precioProducto.value)});
 guardar();renderProductos();actualizarDashboard();
 nombreProducto.value="";precioProducto.value="";
@@ -252,12 +293,10 @@ tablaProductos.innerHTML+=`<tr><td>${p.nombre}</td><td>$${p.precio}</td><td><but
 function eliminarProducto(i){productos.splice(i,1);guardar();renderProductos();actualizarDashboard();}
 
 function agregarReserva(){
-if(!clienteReserva.value||!fechaReserva.value||!horaReserva.value)return alert("Complete datos");
 let existe=reservas.find(r=>r.fecha===fechaReserva.value&&r.hora===horaReserva.value);
 if(existe)return alert("Horario ocupado");
 reservas.push({cliente:clienteReserva.value,fecha:fechaReserva.value,hora:horaReserva.value,estado:"Pendiente"});
-guardar();renderReservas();
-clienteReserva.value="";fechaReserva.value="";horaReserva.value="";
+guardar();renderReservas();generarCalendario();
 }
 function renderReservas(){
 tablaReservas.innerHTML="";
@@ -265,13 +304,11 @@ reservas.forEach((r,i)=>{
 tablaReservas.innerHTML+=`<tr><td>${r.cliente}</td><td>${r.fecha}</td><td>${r.hora}</td><td>${r.estado}</td><td><button class="success" onclick="confirmar(${i})">✔</button></td></tr>`;
 });
 }
-function confirmar(i){reservas[i].estado="Confirmada";guardar();renderReservas();}
+function confirmar(i){reservas[i].estado="Confirmada";guardar();renderReservas();generarCalendario();}
 
 function agregarVenta(){
-if(!clienteVenta.value||!montoVenta.value)return alert("Complete datos");
 ventas.push({cliente:clienteVenta.value,monto:parseFloat(montoVenta.value)});
 guardar();renderVentas();actualizarDashboard();
-clienteVenta.value="";montoVenta.value="";
 }
 function renderVentas(){
 tablaVentas.innerHTML="";
@@ -280,18 +317,38 @@ tablaVentas.innerHTML+=`<tr><td>${v.cliente}</td><td>$${v.monto}</td></tr>`;
 });
 }
 
-function actualizarGrafico(){
-let ctx=document.getElementById("graficoVentas");
-let total=ventas.reduce((a,b)=>a+b.monto,0);
-if(window.miGrafico)window.miGrafico.destroy();
-window.miGrafico=new Chart(ctx,{
-type:"bar",
-data:{labels:["Ingresos"],datasets:[{label:"Total",data:[total],backgroundColor:"#ec4899"}]}
-});
-}
+/* CALENDARIO */
+let fechaActual=new Date();
+let mesActual=fechaActual.getMonth();
+let añoActual=fechaActual.getFullYear();
 
-function exportarPDF(){
-window.print();
+function generarCalendario(){
+const calendario=document.getElementById("calendario");
+calendario.innerHTML="";
+const primerDia=new Date(añoActual,mesActual,1).getDay();
+const ultimoDia=new Date(añoActual,mesActual+1,0).getDate();
+mesActualTexto.innerText=new Date(añoActual,mesActual).toLocaleString("es-ES",{month:"long",year:"numeric"});
+for(let i=0;i<primerDia;i++){calendario.innerHTML+="<div></div>";}
+for(let dia=1;dia<=ultimoDia;dia++){
+let fechaCompleta=`${añoActual}-${String(mesActual+1).padStart(2,"0")}-${String(dia).padStart(2,"0")}`;
+let div=document.createElement("div");
+div.innerText=dia;
+let reservasDia=reservas.filter(r=>r.fecha===fechaCompleta);
+if(reservasDia.length===0){div.classList.add("libre");}
+else if(reservasDia.length>=5){div.classList.add("lleno");}
+else{div.classList.add("ocupado");}
+div.addEventListener("click",()=>mostrarDetalleDia(fechaCompleta));
+calendario.appendChild(div);
+}
+}
+function cambiarMes(v){mesActual+=v;if(mesActual<0){mesActual=11;añoActual--;}if(mesActual>11){mesActual=0;añoActual++;}generarCalendario();}
+function mostrarDetalleDia(fecha){
+let reservasDia=reservas.filter(r=>r.fecha===fecha);
+if(reservasDia.length===0){detalleDia.innerHTML="<p>No hay reservas</p>";return;}
+let html="<ul>";
+reservasDia.forEach(r=>{html+=`<li><strong>${r.hora}</strong> - ${r.cliente} (${r.estado})</li>`});
+html+="</ul>";
+detalleDia.innerHTML=html;
 }
 
 renderClientes();
@@ -299,6 +356,7 @@ renderProductos();
 renderReservas();
 renderVentas();
 actualizarDashboard();
+generarCalendario();
 </script>
 
 </body>
