@@ -1,440 +1,432 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manicure PRO</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manicuras PRO</title>
 
-<link rel="manifest" href="manifest.json">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
-<style>
-body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
-overflow-x:hidden;
-}
+    <style>
+        /* Reset y base */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
 
-/* ================= FONDO ANIMADO ================= */
-.auth-container{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#fce7f3,#fbcfe8,#f9a8d4);
-position:relative;
-overflow:hidden;
-}
+        body {
+            background: #FFF5E1;
+            color: #333;
+        }
 
-/* Burbujas */
-.bubble{
-position:absolute;
-bottom:-100px;
-background:rgba(255,255,255,0.3);
-border-radius:50%;
-animation:float 12s infinite ease-in;
-}
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-@keyframes float{
-0%{transform:translateY(0) scale(1);}
-100%{transform:translateY(-110vh) scale(1.2);}
-}
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-/* ================= CARD ================= */
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #F8C8DC;
+        }
 
-.auth-card{
-background:white;
-padding:40px;
-border-radius:30px;
-box-shadow:0 25px 50px rgba(0,0,0,0.2);
-width:360px;
-z-index:2;
-animation:iphoneIn 0.6s ease;
-}
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            font-weight: 500;
+        }
 
-@keyframes iphoneIn{
-0%{opacity:0; transform:translateY(40px);}
-100%{opacity:1; transform:translateY(0);}
-}
+        nav ul li a:hover {
+            color: #DCC8F8;
+        }
 
-.logo{
-text-align:center;
-margin-bottom:20px;
-}
+        /* Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url('https://i.ibb.co/6rMZ7wq/mockup-manicure-hero.jpg') center/cover no-repeat;
+            height: 90vh;
+            text-align: center;
+            color: #333;
+            position: relative;
+        }
 
-.logo h1{
-margin:0;
-color:#ec4899;
-}
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 245, 225, 0.6);
+        }
 
-.logo p{
-margin:5px 0 0;
-color:#777;
-font-size:14px;
-}
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
 
-/* Ilustración elegante */
-.illustration{
-font-size:60px;
-text-align:center;
-margin-bottom:15px;
-}
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
 
-/* Tabs */
-.tabs{
-display:flex;
-margin-bottom:20px;
-}
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
 
-.tabs button{
-flex:1;
-background:none;
-border:none;
-font-weight:bold;
-padding:8px;
-color:#aaa;
-cursor:pointer;
-}
+        .hero button {
+            background-color: #F8C8DC;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #fff;
+        }
 
-.tabs button.active{
-color:#ec4899;
-border-bottom:3px solid #ec4899;
-}
+        .hero button:hover {
+            background-color: #DCC8F8;
+        }
 
-input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border-radius:10px;
-border:1px solid #ddd;
-}
+        /* Servicios */
+        .services {
+            padding: 80px 50px;
+            text-align: center;
+        }
 
-.btn-main{
-width:100%;
-padding:10px;
-border:none;
-border-radius:12px;
-background:#ec4899;
-color:white;
-font-weight:bold;
-cursor:pointer;
-margin-bottom:8px;
-transition:0.2s;
-}
+        .services h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #333;
+        }
 
-.btn-main:hover{background:#db2777;}
-.btn-main:active{transform:scale(0.95);}
+        .service-cards {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-.guest{
-background:#f3f4f6;
-color:#444;
-}
+        .service-card {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 30px 20px;
+            width: 220px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
 
-.hidden{display:none;}
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
 
-/* ================= APP ================= */
+        .service-card img {
+            width: 60px;
+            margin-bottom: 15px;
+        }
 
-.header{
-background:#ec4899;
-color:white;
-padding:20px;
-text-align:center;
-animation:iphoneIn 0.5s ease;
-}
+        .service-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
 
-.container{
-max-width:1000px;
-margin:auto;
-padding:20px;
-animation:iphoneIn 0.6s ease;
-}
+        .service-card p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
 
-.card{
-background:white;
-padding:20px;
-border-radius:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-margin-bottom:20px;
-}
+        .service-btn {
+            margin-top: 30px;
+            background-color: #F8C8DC;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: #fff;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.calendar{
-display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:8px;
-}
+        .service-btn:hover {
+            background-color: #DCC8F8;
+        }
 
-.day{
-padding:12px;
-border-radius:10px;
-text-align:center;
-font-weight:bold;
-cursor:pointer;
-background:#fce7f3;
-}
+        /* Galería */
+        .gallery {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: #F8F0FF;
+        }
 
-.day:hover{background:#f9a8d4;}
+        .gallery h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
 
-.horas{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:6px;
-margin-top:10px;
-}
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
 
-button.small{
-padding:6px;
-border-radius:8px;
-border:none;
-background:#fbcfe8;
-cursor:pointer;
-}
+        .gallery-grid img {
+            width: 100%;
+            border-radius: 15px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
 
-.admin-delete{background:#ef4444;color:white;}
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+        }
 
-.stat-box{
-background:#fdf2f8;
-padding:10px;
-border-radius:10px;
-margin-bottom:8px;
-}
+        /* Testimonios */
+        .testimonials {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: #FFF5E1;
+        }
 
-</style>
+        .testimonials h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
+
+        .testimonial-cards {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .testimonial-card {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 25px;
+            width: 300px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: left;
+            position: relative;
+        }
+
+        .testimonial-card p {
+            font-size: 15px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .testimonial-card span {
+            font-weight: 600;
+            font-size: 14px;
+            color: #F8C8DC;
+        }
+
+        .stars {
+            color: #F8C8DC;
+        }
+
+        /* Formulario de contacto */
+        .contact {
+            padding: 80px 50px;
+            text-align: center;
+            background-color: #F0FFF5;
+        }
+
+        .contact h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
+
+        .contact form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .contact input, .contact select {
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .contact button {
+            padding: 15px;
+            border-radius: 30px;
+            border: none;
+            background-color: #F8C8DC;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .contact button:hover {
+            background-color: #DCC8F8;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 50px;
+            text-align: center;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        footer a {
+            margin: 0 10px;
+            color: #F8C8DC;
+            font-size: 20px;
+        }
+
+        footer p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media(max-width: 768px){
+            .service-cards, .testimonial-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- ================= AUTH ================= -->
-<div id="authView" class="auth-container">
+    <!-- Header -->
+    <header>
+        <div class="logo">Manicuras PRO</div>
+        <nav>
+            <ul>
+                <li><a href="#hero">Inicio</a></li>
+                <li><a href="#services">Servicios</a></li>
+                <li><a href="#gallery">Galería</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<!-- Burbujas -->
-<script>
-for(let i=0;i<15;i++){
-let bubble=document.createElement("div");
-bubble.className="bubble";
-bubble.style.left=Math.random()*100+"%";
-bubble.style.width=bubble.style.height=(20+Math.random()*60)+"px";
-bubble.style.animationDuration=(8+Math.random()*10)+"s";
-document.body.appendChild(bubble);
-}
-</script>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Luce tus uñas como nunca antes</h1>
+            <p>¡Embellece tu estilo con nuestras mejores manicuras!</p>
+            <button>Agenda tu cita</button>
+        </div>
+    </section>
 
-<div class="auth-card">
+    <!-- Servicios -->
+    <section class="services" id="services">
+        <h2>Nuestros Servicios</h2>
+        <div class="service-cards">
+            <div class="service-card">
+                <img src="https://i.ibb.co/0sZ2p3m/manicure-icon.png" alt="Manicure Clásico">
+                <h3>Manicure Clásico</h3>
+            </div>
+            <div class="service-card">
+                <img src="https://i.ibb.co/z6yZqkZ/acrilicas-icon.png" alt="Uñas Acrílicas">
+                <h3>Uñas Acrílicas</h3>
+            </div>
+            <div class="service-card">
+                <img src="https://i.ibb.co/fG6kR64/nailart-icon.png" alt="Nail Art">
+                <h3>Nail Art</h3>
+            </div>
+            <div class="service-card">
+                <img src="https://i.ibb.co/1m7pR8M/spa-icon.png" alt="Spa de Uñas">
+                <h3>Spa de Uñas</h3>
+            </div>
+        </div>
+        <button class="service-btn">Ver todos los servicios</button>
+    </section>
 
-<div class="illustration">💅✨</div>
+    <!-- Galería -->
+    <section class="gallery" id="gallery">
+        <h2>Galería de Diseños</h2>
+        <div class="gallery-grid">
+            <img src="https://i.ibb.co/YdQGqg5/nails1.jpg" alt="Diseño 1">
+            <img src="https://i.ibb.co/LxD5F7V/nails2.jpg" alt="Diseño 2">
+            <img src="https://i.ibb.co/6t3kC0F/nails3.jpg" alt="Diseño 3">
+            <img src="https://i.ibb.co/1L4KZFV/nails4.jpg" alt="Diseño 4">
+        </div>
+    </section>
 
-<div class="logo">
-<h1>Manicures PRO</h1>
-<p>Demo Profesional de Agenda</p>
-</div>
+    <!-- Testimonios -->
+    <section class="testimonials">
+        <h2>Testimonios de Nuestras Clientas</h2>
+        <div class="testimonial-cards">
+            <div class="testimonial-card">
+                <p>¡Mis uñas quedaron preciosas! Excelente atención, volveré pronto.</p>
+                <span>- Laura G.</span>
+                <div class="stars">★★★★★</div>
+            </div>
+            <div class="testimonial-card">
+                <p>Me encantó el diseño, súper profesional y muy limpio el lugar.</p>
+                <span>- Ana M.</span>
+                <div class="stars">★★★★★</div>
+            </div>
+        </div>
+    </section>
 
-<div class="tabs">
-<button id="btnLogin" class="active" onclick="mostrarLogin()">Ingresar</button>
-<button id="btnRegistro" onclick="mostrarRegistro()">Crear Cuenta</button>
-</div>
+    <!-- Contacto -->
+    <section class="contact" id="contact">
+        <h2>Reserva tu Cita</h2>
+        <form>
+            <input type="text" placeholder="Nombre" required>
+            <input type="email" placeholder="Email" required>
+            <select required>
+                <option value="">Servicio Deseado</option>
+                <option value="manicure">Manicure Clásico</option>
+                <option value="acrilicas">Uñas Acrílicas</option>
+                <option value="nailart">Nail Art</option>
+                <option value="spa">Spa de Uñas</option>
+            </select>
+            <input type="date" required>
+            <button type="submit">Reservar Ahora</button>
+        </form>
+    </section>
 
-<div id="loginForm">
-<input type="text" id="usuario" placeholder="Usuario">
-<input type="password" id="clave" placeholder="Contraseña">
-<button class="btn-main" onclick="login()">Ingresar</button>
-<button class="btn-main guest" onclick="entrarInvitado()">Continuar como invitado</button>
-<p style="font-size:12px;text-align:center;color:#777;">
-</p>
-</div>
-
-<div id="registroForm" class="hidden">
-<input type="text" id="nuevoUsuario" placeholder="Nombre completo">
-<input type="password" id="nuevaClave" placeholder="Contraseña">
-<button class="btn-main" onclick="registrar()">Crear Cuenta</button>
-</div>
-
-</div>
-</div>
-
-<!-- ================= APP ================= -->
-<div id="appView" class="hidden">
-
-<div class="header">
-<h2>manicures PRO Studio</h2>
-<p id="saludo"></p>
-<button onclick="logout()" style="margin-top:10px;background:white;color:#ec4899;">Cerrar sesión</button>
-</div>
-
-<div class="container">
-
-<div class="card">
-<h3 id="mesActual"></h3>
-<div class="calendar" id="calendar"></div>
-</div>
-
-<div id="clientePanel" class="card hidden"></div>
-
-<div id="adminPanel" class="card hidden">
-<h3>Panel Administrador</h3>
-<div id="estadisticas"></div>
-<button onclick="exportarPDF()">Exportar PDF</button>
-<ul id="listaAdmin"></ul>
-</div>
-
-</div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-
-/* ======= DATA ======= */
-let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[
-{usuario:"admin",clave:"1234",rol:"admin"}
-];
-
-let reservas=JSON.parse(localStorage.getItem("reservas"))||[];
-let sesion=JSON.parse(localStorage.getItem("sesion"));
-let fechaActual=new Date();
-let precioBase=15000;
-
-/* ======= AUTO LOGIN ======= */
-if(sesion){
-mostrarApp();
-}
-
-/* ======= AUTH ======= */
-function mostrarLogin(){
-loginForm.classList.remove("hidden");
-registroForm.classList.add("hidden");
-btnLogin.classList.add("active");
-btnRegistro.classList.remove("active");
-}
-
-function mostrarRegistro(){
-registroForm.classList.remove("hidden");
-loginForm.classList.add("hidden");
-btnRegistro.classList.add("active");
-btnLogin.classList.remove("active");
-}
-
-function registrar(){
-let usuario=nuevoUsuario.value;
-let clave=nuevaClave.value;
-if(!usuario||!clave)return alert("Completa datos");
-usuarios.push({usuario,clave,rol:"cliente"});
-localStorage.setItem("usuarios",JSON.stringify(usuarios));
-alert("Cuenta creada 💅");
-mostrarLogin();
-}
-
-function login(){
-let user=usuarios.find(u=>u.usuario===usuario.value&&u.clave===clave.value);
-if(!user)return alert("Datos incorrectos");
-sesion=user;
-localStorage.setItem("sesion",JSON.stringify(sesion));
-mostrarApp();
-}
-
-function entrarInvitado(){
-sesion={usuario:"Invitado",rol:"cliente"};
-mostrarApp();
-}
-
-function logout(){
-localStorage.removeItem("sesion");
-location.reload();
-}
-
-/* ======= APP ======= */
-function mostrarApp(){
-authView.classList.add("hidden");
-appView.classList.remove("hidden");
-saludo.textContent="Bienvenida "+sesion.usuario+" 💖";
-generarCalendario();
-if(sesion.rol==="admin"){
-adminPanel.classList.remove("hidden");
-mostrarReservasAdmin();
-estadisticas();
-}
-}
-
-/* ======= CALENDARIO ======= */
-function generarCalendario(){
-calendar.innerHTML="";
-let año=fechaActual.getFullYear();
-let mes=fechaActual.getMonth();
-let dias=new Date(año,mes+1,0).getDate();
-mesActual.textContent=fechaActual.toLocaleString('es-ES',{month:'long',year:'numeric'});
-
-for(let i=1;i<=dias;i++){
-let fecha=`${año}-${String(mes+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-let div=document.createElement("div");
-div.className="day";
-div.textContent=i;
-if(sesion.rol==="cliente"){
-div.onclick=()=>abrirAgenda(fecha);
-}
-calendar.appendChild(div);
-}
-}
-
-function abrirAgenda(fecha){
-clientePanel.classList.remove("hidden");
-clientePanel.innerHTML=`
-<h3>Agendar para ${fecha}</h3>
-<input type="text" id="nombreCliente" placeholder="Tu nombre">
-<div class="horas">
-<button class="small" onclick="reservar('${fecha}','10:00')">10:00</button>
-<button class="small" onclick="reservar('${fecha}','12:00')">12:00</button>
-<button class="small" onclick="reservar('${fecha}','15:00')">15:00</button>
-</div>
-`;
-}
-
-function reservar(fecha,hora){
-let nombre=document.getElementById("nombreCliente").value||sesion.usuario;
-reservas.push({cliente:nombre,fecha,hora,precio:precioBase});
-localStorage.setItem("reservas",JSON.stringify(reservas));
-alert("Reserva confirmada 💅");
-}
-
-/* ======= ADMIN ======= */
-function mostrarReservasAdmin(){
-listaAdmin.innerHTML="";
-reservas.forEach((r,i)=>{
-listaAdmin.innerHTML+=`
-<li>${r.cliente} - ${r.fecha} ${r.hora} - $${r.precio}
-<button class="admin-delete" onclick="eliminar(${i})">X</button>
-</li>`;
-});
-}
-
-function eliminar(i){
-reservas.splice(i,1);
-localStorage.setItem("reservas",JSON.stringify(reservas));
-mostrarReservasAdmin();
-estadisticas();
-}
-
-function estadisticas(){
-let mes=String(fechaActual.getMonth()+1).padStart(2,'0');
-let año=fechaActual.getFullYear();
-let reservasMes=reservas.filter(r=>r.fecha.startsWith(`${año}-${mes}`));
-let ingresos=reservasMes.reduce((a,b)=>a+b.precio,0);
-estadisticas.innerHTML=`
-<div class="stat-box">Reservas: ${reservasMes.length}</div>
-<div class="stat-box">Ingresos simulados: $${ingresos.toLocaleString()}</div>
-`;
-}
-
-/* ======= PDF ======= */
-function exportarPDF(){
-const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
-doc.text("Valentina Nails - Demo Reservas",10,10);
-let y=20;
-reservas.forEach(r=>{
-doc.text(`${r.cliente} - ${r.fecha} ${r.hora}`,10,y);
-y+=10;
-});
-doc.save("demo-reservas.pdf");
-}
-
-</script>
+    <!-- Footer -->
+    <footer>
+        <div>
+            <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Instagram" width="30"></a>
+            <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733646.png" alt="TikTok" width="30"></a>
+            <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="30"></a>
+        </div>
+        <p>Contacto: info@manicuraspro.com | Tel: 123-456-7890 | Ubicación: Ejemplo, Ciudad</p>
+        <p>Horario: Lun - Sab: 9:00 AM - 7:00 PM</p>
+    </footer>
 
 </body>
 </html>
