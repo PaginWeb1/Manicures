@@ -6,7 +6,9 @@
     <title>Manicuras PRO</title>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         /* Reset y base */
@@ -36,6 +38,7 @@
             background-color: #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             position: sticky;
+            transition:all .3s ease;
             top: 0;
             z-index: 100;
         }
@@ -58,6 +61,20 @@
             color: #DCC8F8;
         }
 
+        /* Botons */
+        .btn{
+            display:inline-block;
+            background:#F8C8DC;
+            color:white;
+            padding:15px 35px;
+            border-radius:30px;
+            transition:.3s;
+        }
+
+        .btn:hover{
+            background:#DCC8F8;
+        }
+
         /* Hero */
         .hero {
             display: flex;
@@ -65,6 +82,7 @@
             align-items: center;
             justify-content: center;
             background: url('https://i.ibb.co/6rMZ7wq/mockup-manicure-hero.jpg') center/cover no-repeat;
+            background-attachment: fixed;
             height: 90vh;
             text-align: center;
             color: #333;
@@ -321,6 +339,17 @@
                 align-items: center;
             }
         }
+
+        @media(max-width:768px){
+            header{
+               flex-direction:column;
+            }
+
+             nav ul{
+               flex-direction:column;
+               gap:15px;
+             }
+        }
     </style>
 </head>
 <body>
@@ -343,7 +372,9 @@
         <div class="hero-content">
             <h1>Luce tus uñas como nunca antes</h1>
             <p>¡Embellece tu estilo con nuestras mejores manicuras!</p>
-            <button>Agenda tu cita</button>
+            <a href="#contact" class="btn">
+                Agenda tu cita
+            </a>
         </div>
     </section>
 
@@ -353,19 +384,19 @@
         <div class="service-cards">
             <div class="service-card">
                 <img src="https://i.ibb.co/0sZ2p3m/manicure-icon.png" alt="Manicure Clásico">
-                <h3>Manicure Clásico</h3>
+                    <h3>Manicure Clásico</h3>
             </div>
             <div class="service-card">
                 <img src="https://i.ibb.co/z6yZqkZ/acrilicas-icon.png" alt="Uñas Acrílicas">
-                <h3>Uñas Acrílicas</h3>
+                    <h3>Uñas Acrílicas</h3>
             </div>
             <div class="service-card">
                 <img src="https://i.ibb.co/fG6kR64/nailart-icon.png" alt="Nail Art">
-                <h3>Nail Art</h3>
+                    <h3>Nail Art</h3>
             </div>
             <div class="service-card">
                 <img src="https://i.ibb.co/1m7pR8M/spa-icon.png" alt="Spa de Uñas">
-                <h3>Spa de Uñas</h3>
+                    <h3>Spa de Uñas</h3>
             </div>
         </div>
         <button class="service-btn">Ver todos los servicios</button>
@@ -402,7 +433,7 @@
     <!-- Contacto -->
     <section class="contact" id="contact">
         <h2>Reserva tu Cita</h2>
-        <form>
+        <form action="" method="POST">
             <input type="text" placeholder="Nombre" required>
             <input type="email" placeholder="Email" required>
             <select required>
@@ -427,6 +458,6 @@
         <p>Contacto: info@manicuraspro.com | Tel: 123-456-7890 | Ubicación: Ejemplo, Ciudad</p>
         <p>Horario: Lun - Sab: 9:00 AM - 7:00 PM</p>
     </footer>
-
 </body>
 </html>
+
