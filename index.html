@@ -3,6 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Centro profesional de manicura, uñas acrílicas, nail art y spa de uñas.">
+        
+    <meta
+        name="keywords"
+        content="manicure,uñas acrílicas,nail art,spa de uñas,salón de belleza">
+        
+    <meta
+        property="og:title"
+        content="Manicuras PRO">
+    
+    <meta
+        property="og:description"
+        content="Diseños exclusivos y cuidado profesional para tus uñas">
+    
+    <meta
+        property="og:type"
+        content="website">
     <title>Manicuras PRO</title>
 
     <!-- Google Fonts -->
@@ -11,6 +31,19 @@
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
+        :root{
+            --pink:#F8C8DC;
+            --lavender:#DCC8F8;
+            --cream:#FFF5E1;
+            --white:#ffffff;
+            --text:#333333;
+            --shadow:0 4px 15px rgba(0,0,0,.08);
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+        
         /* Reset y base */
         * {
             box-sizing: border-box;
@@ -76,17 +109,21 @@
         }
 
         /* Hero */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: url('https://i.ibb.co/6rMZ7wq/mockup-manicure-hero.jpg') center/cover no-repeat;
-            background-attachment: fixed;
-            height: 90vh;
-            text-align: center;
-            color: #333;
-            position: relative;
+        .hero{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+            height:90vh;
+            background:
+            linear-gradient(
+            rgba(255,245,225,.65),
+            rgba(255,245,225,.65)
+        ),
+            url("https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1974")
+            center/cover no-repeat;
+            text-align:center;
+            position:relative;
         }
 
         .hero::after {
@@ -98,9 +135,21 @@
 
         .hero-content {
             position: relative;
+            animation:fadeUp 1s ease;
             z-index: 1;
         }
 
+        @keyframes fadeUp{
+            from{
+                opacity:0;
+                transform:translateY(40px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+        
         .hero h1 {
             font-family: 'Playfair Display', serif;
             font-size: 48px;
@@ -152,13 +201,13 @@
             border-radius: 20px;
             padding: 30px 20px;
             width: 220px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: 0.3s;
+            box-shadow:var(--shadow);
+            transition:.4s;
         }
 
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transform: translateY(-12px);
+            box-shadow:0 8px 25px rgba(0,0,0,.12);
         }
 
         .service-card img {
@@ -212,15 +261,18 @@
             gap: 20px;
         }
 
-        .gallery-grid img {
-            width: 100%;
-            border-radius: 15px;
-            transition: 0.3s;
-            cursor: pointer;
+        .gallery-grid img{
+            width:100%;
+            height:250px;
+            object-fit:cover;
+            border-radius:15px;
+            transition:.4s;
         }
-
-        .gallery-grid img:hover {
-            transform: scale(1.05);
+        
+        .gallery-grid img:hover{
+            transform:scale(1.08);
+            box-shadow:
+            0 8px 20px rgba(0,0,0,.15);
         }
 
         /* Testimonios */
@@ -332,6 +384,23 @@
             color: #666;
         }
 
+        .whatsapp{
+            position:fixed;
+            right:25px;
+            bottom:25px;
+            width:60px;
+            height:60px;
+            border-radius:50%;
+            background:#25D366;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:30px;
+            color:white;
+            box-shadow:0 5px 15px rgba(0,0,0,.2);
+            z-index:999;
+        }
+
         /* Responsive */
         @media(max-width: 768px){
             .service-cards, .testimonial-cards {
@@ -406,10 +475,10 @@
     <section class="gallery" id="gallery">
         <h2>Galería de Diseños</h2>
         <div class="gallery-grid">
-            <img src="https://i.ibb.co/YdQGqg5/nails1.jpg" alt="Diseño 1">
-            <img src="https://i.ibb.co/LxD5F7V/nails2.jpg" alt="Diseño 2">
-            <img src="https://i.ibb.co/6t3kC0F/nails3.jpg" alt="Diseño 3">
-            <img src="https://i.ibb.co/1L4KZFV/nails4.jpg" alt="Diseño 4">
+            <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1200" alt="Diseño 1">
+            <img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?q=80&w=1200" alt="Diseño 2">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200" alt="Diseño 3">
+            <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1200" alt="Diseño 4">
         </div>
     </section>
 
@@ -458,6 +527,42 @@
         <p>Contacto: info@manicuraspro.com | Tel: 123-456-7890 | Ubicación: Ejemplo, Ciudad</p>
         <p>Horario: Lun - Sab: 9:00 AM - 7:00 PM</p>
     </footer>
+    
+    <a class="whatsapp" 
+        href="https://wa.me/521234567890"
+        target="_blank">💬
+    </a>
+
+    <script>
+            document.querySelector("form")
+            .addEventListener("submit",(e)=>{
+            e.preventDefault();
+    
+            const nombre =
+            document.querySelector('input[type="text"]').value;
+    
+            const servicio =
+            document.querySelector("select").value;
+    
+            const fecha =
+            document.querySelector('input[type="date"]').value;
+    
+            const mensaje =
+            `Hola, soy ${nombre}.
+                Quiero reservar:
+                ${servicio}
+                Para el día:
+                ${fecha}`;
+            
+            window.open(
+                `https://wa.me/521234567890?text=${encodeURIComponent(mensaje)}`,
+                "_blank"
+            );
+
+        });
+
+    </script>
+    
 </body>
 </html>
 
